@@ -1,0 +1,39 @@
+name: sweep
+on:
+  workflow_dispatch:
+    inputs:
+      entries:
+        description: space-separated paths
+        required: true
+      budgets:
+        default: "2.5e9,1e10,4e10"
+      seeds:
+        default: "3"
+      name:
+        default: sweep
+
+jobs:
+  sweep:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - env:
+          ENTRIES: ${{ inputs.entries }}
+          BUDGETS: ${{ inputs.budgets }}
+          SEEDS: ${{ inputs.seeds }}
+        run: python tools/sweep.py $ENTRIES --budgets "$BUDGETS" --seeds "$SEEDS" --out sweep.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ inputs.name }}
+          path: sweep.json
