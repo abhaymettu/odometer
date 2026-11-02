@@ -1,0 +1,67 @@
+{
+ "attempt": "attempt-01",
+ "smoke": false,
+ "base_record": "06-mixer-fold",
+ "status": "finished",
+ "claims": [
+  {
+   "n": 1,
+   "seed_runs_before": 16,
+   "claimed_dev_bpb": 1.1261,
+   "n_seeds": 8,
+   "why": "Same hashed context-mixing model as the record, scored by verify.py on 8 fresh seeds that were not used for any choice: dev mean 1.1261, 95% CI +-0.0003, SD 0.0004, a gain of about 0.018 on the record's 1.1445. Changes, with single-seed estimates from sequential tests on seed 11 (seed noise about 0.0005, so the smaller ones are rough): masking contexts that reach back before the window start, which zero padding made look like story starts (-0.005, eval-only on saved params); raw-hash in-window votes with five stages tuned on dev (-0.0025); batch 128 with table updates half as often (-0.002); mixer learning rate 1.2e-2 (-0.001); folding rare bytes into 76 softmax classes instead of 130, which buys more training bytes (-0.004); decaying the table learning rate over the run (-0.003). Caveats: about 40 variants were compared, almost all on one seed, and the five vote-stage constants were fitted on dev (half-split check showed a similar gain on the untouched half), so dev is slightly optimistic. The last change, spending spare parameter capacity on rows, was within noise. A per-window paired comparison with the record on one seed gives a gain of 0.0187 with SE 0.0008, but dev window sampling alone has SE 0.0057 on the level, so the sealed-split mean may sit roughly +-0.008 from this dev figure for reasons common to every entry; the gain over the record is the more reliable quantity.",
+   "sha256": "3b98cfd4e56f4c5bd07a09293dee852defd872fff5c0199800519077f740d79c",
+   "outcome": "replicated",
+   "gain": 0.018450979457496075,
+   "ci95": 0.0010710972080032496,
+   "ci_upper": 0.019522076665499325,
+   "p": 2.467835197413953e-12,
+   "df": 9.811714954989203,
+   "claimed_gain": 0.018363973272884193,
+   "record": true,
+   "bpbs": [
+    1.12515464668562,
+    1.1262182930441962,
+    1.1251184916251875,
+    1.1249392483377278,
+    1.1255838785613295,
+    1.1263287986637935,
+    1.1258878975630944,
+    1.1249558662790302
+   ],
+   "seeds": [
+    1588466942,
+    63896317,
+    1509097783,
+    315581449,
+    1394634901,
+    2103169519,
+    2138064697,
+    588077787
+   ],
+   "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+   "verdict": {
+    "against": "/home/runner/work/odometer/odometer/study/attempts/attempt-01/base.json",
+    "margin": 0.002,
+    "alpha": 0.01,
+    "stage1": {
+     "gain": 0.018450979457496075,
+     "ci95": 0.0010710972080032496,
+     "df": 9.811714954989203,
+     "p_beyond_margin": 7.549231671967187e-12,
+     "passes": true
+    },
+    "record": true,
+    "stage2": {
+     "gain": 0.018523025472995114,
+     "ci95": 0.001100377623921401,
+     "df": 11.020619552155965,
+     "p_beyond_margin": 1.121010266839864e-12,
+     "passes": true
+    }
+   }
+  }
+ ],
+ "ignored": [],
+ "seed_runs_total": 16
+}
