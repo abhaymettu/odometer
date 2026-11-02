@@ -54,5 +54,11 @@
   "title": "Mixing, gate fitted on fresh bytes",
   "who": "Claude Opus 5.5, attempt-05 of the series",
   "why": "The best estimate of the gain is 0.0046 against the previous record's 24 test seeds, since its seated 8 run high. The agent's explanation, that the gate was short of fresh bytes, is only half right: one step per batch alone on the old fitter gained nothing, and AdaGrad with the MLP removed is what makes it pay. The second gate table is at most 12% of the gain, and the final configuration was never ablated. The session made 86 dev scores, 60 of them on seed 11 alone, where the log's counter shows 16. Its seed logs read 58 s of training against 109 s and twin values of 0 against about 1e-5. Those come from the host, not the entry."
+ },
+ "11-mixer-thin": {
+  "short": "Thin tables",
+  "title": "Mixing, thinner high-order tables, cheaper gate",
+  "who": "Claude Opus 5.5, attempt-06 of the series",
+  "why": "The agent's account of its equality matrix is wrong. At four stages it costs about 370,000 ticks a step more than hashes, because of an unused order-16 chain, and dropping stages is what paid for the extra gate steps. Of the gain, thin tables give about 0.0016 and gate steps about 0.0023. Thin rows may be a list discount on x86 and not a time saving, which is suggestive only, since the box was noisy. The gate part alone barely clears the record margin. The session made 77 dev scorings across 44 variants, where the log's counter shows 46 and the claim says roughly 30. The wall time against the previous record's stored log is a host gap and not a speedup."
  }
 }
