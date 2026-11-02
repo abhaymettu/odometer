@@ -48,5 +48,11 @@
   "title": "Mixing, words and story boundaries",
   "who": "Claude Opus 5.5, attempt-04 of the series",
   "why": "About three quarters of the gain is eval-time modelling, paid for with 36.5% more eval ticks, a split measured only by single-seed dev runs. The story-boundary part depends on this corpus's NUL separator. Twin values reached 1.43e-5, inferred to be host float noise and below the tolerance of 1e-4. Host-adjusted wall time per tick is about 8.8% over the previous record, also inferred."
+ },
+ "10-mixer-fresh": {
+  "short": "Fresh gate",
+  "title": "Mixing, gate fitted on fresh bytes",
+  "who": "Claude Opus 5.5, attempt-05 of the series",
+  "why": "The best estimate of the gain is 0.0046 against the previous record's 24 test seeds, since its seated 8 run high. The agent's explanation, that the gate was short of fresh bytes, is only half right: one step per batch alone on the old fitter gained nothing, and AdaGrad with the MLP removed is what makes it pay. The second gate table is at most 12% of the gain, and the final configuration was never ablated. The session made 86 dev scores, 60 of them on seed 11 alone, where the log's counter shows 16. Its seed logs read 58 s of training against 109 s and twin values of 0 against about 1e-5. Those come from the host, not the entry."
  }
 }

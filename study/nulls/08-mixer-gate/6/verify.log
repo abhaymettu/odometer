@@ -1,0 +1,11 @@
+08-mixer-gate: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed  789975937  test bpb 1.1068  train 3.997e+10 ticks   103.4 s  eval 8,923 ticks/byte  twins 7.6e-06
+  seed  750185970  test bpb 1.1072  train 3.997e+10 ticks   103.3 s  eval 8,923 ticks/byte  twins 1.1e-05
+  seed 1777912207  test bpb 1.1075  train 3.997e+10 ticks   105.5 s  eval 8,923 ticks/byte  twins 1.0e-05
+  seed 1089104623  test bpb 1.1055  train 3.997e+10 ticks   105.4 s  eval 8,923 ticks/byte  twins 9.6e-06
+  seed  647363529  test bpb 1.1069  train 3.997e+10 ticks   106.0 s  eval 8,923 ticks/byte  twins 8.6e-06
+  seed    2134632  test bpb 1.1075  train 3.997e+10 ticks   105.9 s  eval 8,923 ticks/byte  twins 8.6e-06
+  seed 1131166488  test bpb 1.1066  train 3.997e+10 ticks   106.2 s  eval 8,923 ticks/byte  twins 1.3e-05
+  seed 1688402422  test bpb 1.1078  train 3.997e+10 ticks   106.2 s  eval 8,923 ticks/byte  twins 1.1e-05
+  mean 1.1070 +- 0.0006 bpb (95% CI, n=8, sd 0.0007)
+  log: study/nulls/08-mixer-gate/6/verify.json
