@@ -1,0 +1,57 @@
+{
+ "n": 1,
+ "seed_runs_before": 34,
+ "claimed_dev_bpb": 1.0913,
+ "n_seeds": 8,
+ "why": "Same architecture as the record (hashed context tables, a softmax mixer, then a gated in-window PPM stage), with two changes. First, the tables for orders 8, 10 and 12 go from 8 to 4 floats per row with twice the rows, which halves their backward cost and reduces collisions. Second, the gate step is cheaper: in-window byte matches come from one equality matrix multiplied along its diagonals, window constants are built once per fit, a stage multiplies by a reciprocal rather than dividing a whole row, and the in-window stages of order 1 and 16 are removed, giving about 348 gate steps against 263 on cached tables. The score is the mean of 8 fresh seeds on dev (SD 0.0007, 95% CI +-0.0006), against the record's stated 1.0950. On the two seeds where I ran both entries directly, the closest measured relatives scored 1.0920 against the record's 1.0939. Those 8 seeds were not used for selection, but the design was chosen on the same dev bytes using seeds 11 and 12 and an offline harness, so the dev level may be slightly optimistic and the sealed split's level may differ. Roughly 30 other variants were tried and dropped, including word-context tables, an order-16 table, other row widths, larger batches and a target-only gate objective.",
+ "sha256": "e4e93822f08320123ee79ac4362e7f365af4cdef01ad222ae5c7df961700c12b",
+ "outcome": "replicated",
+ "gain": 0.0033760998494456462,
+ "ci95": 0.000836666933855846,
+ "ci_upper": 0.004212766783301492,
+ "p": 2.820190214837742e-06,
+ "df": 9.489512387762636,
+ "claimed_gain": 0.003740213624206179,
+ "record": false,
+ "bpbs": [
+  1.089824938226135,
+  1.089708538327128,
+  1.0898932202401805,
+  1.0897826404909614,
+  1.0894653107503227,
+  1.0896732654603745,
+  1.0897739569387646,
+  1.0886134028231615
+ ],
+ "seeds": [
+  1050442997,
+  1893563464,
+  158213707,
+  2100657307,
+  95191415,
+  1371522809,
+  743556374,
+  2047220314
+ ],
+ "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+ "verdict": {
+  "against": "/home/runner/work/odometer/odometer/study/attempts/attempt-06/base.json",
+  "margin": 0.002,
+  "alpha": 0.01,
+  "stage1": {
+   "gain": 0.0033760998494456462,
+   "ci95": 0.000836666933855846,
+   "df": 9.489512387762636,
+   "p_beyond_margin": 0.0022763791345925097,
+   "passes": true
+  },
+  "record": false,
+  "stage2": {
+   "gain": 0.0029294681935478906,
+   "ci95": 0.0010230837851244272,
+   "df": 13.98576857283468,
+   "p_beyond_margin": 0.03583973441781468,
+   "passes": false
+  }
+ }
+}

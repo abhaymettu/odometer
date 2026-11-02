@@ -1,0 +1,57 @@
+{
+ "n": 2,
+ "seed_runs_before": 46,
+ "claimed_dev_bpb": 1.0909,
+ "n_seeds": 8,
+ "why": "Same architecture as the record (hashed context tables, a softmax mixer, then a gated in-window PPM stage), with three changes. First, the tables for orders 8, 10 and 12 go from 8 to 4 floats per row with twice the rows, which halves their backward cost and reduces collisions. Second, the gate step is cheaper: in-window byte matches come from one equality matrix multiplied along its diagonals, window constants are built once per fit, and a stage multiplies by a reciprocal rather than dividing a whole row. Third, only four in-window stages remain (orders 3 and 6 and the two word contexts), which pays for more gate steps on a data-starved gate, and the gate tables' AdaGrad rate is 0.15. The score is the mean of 8 fresh seeds on dev (SD 0.0006, 95% CI +-0.0005), against the record's stated 1.0950. On seeds 11 and 12, the same code without this docstring scored 1.0906 and the record scored 1.0939. Those 8 seeds were not used for selection, but the stage set and rates were chosen on the same dev bytes, mostly on one seed in an offline harness where differences under about 0.0005 are noise, so the dev level may be slightly optimistic and the sealed split's level may differ. The difference from claim 1 (1.0913, n=8) is about 0.0004, which is within noise, so this claim is not shown to be better than claim 1. Roughly 30 other variants were tried and dropped.",
+ "sha256": "fdac3262e4bb55bda5ea805528aaaa6dd5198331879ee3b6b6ca2685916b463f",
+ "outcome": "replicated",
+ "gain": 0.0041243288786037,
+ "ci95": 0.0008583922703244031,
+ "ci_upper": 0.004982721148928103,
+ "p": 2.556046492307586e-07,
+ "df": 10.71851638456644,
+ "claimed_gain": 0.004140213624206135,
+ "record": true,
+ "bpbs": [
+  1.0890407738705459,
+  1.0885144987660553,
+  1.0892013325458365,
+  1.0887027044603836,
+  1.089501433898683,
+  1.0893457733803062,
+  1.088482413514223,
+  1.0879605105877301
+ ],
+ "seeds": [
+  1808693988,
+  1539860756,
+  2141398835,
+  846375498,
+  2011093018,
+  392559420,
+  2059632786,
+  645115157
+ ],
+ "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+ "verdict": {
+  "against": "/home/runner/work/odometer/odometer/study/attempts/attempt-06/base.json",
+  "margin": 0.002,
+  "alpha": 0.01,
+  "stage1": {
+   "gain": 0.0041243288786037,
+   "ci95": 0.0008583922703244031,
+   "df": 10.71851638456644,
+   "p_beyond_margin": 0.00010769686497616931,
+   "passes": true
+  },
+  "record": true,
+  "stage2": {
+   "gain": 0.004060546868930759,
+   "ci95": 0.0008592080505171353,
+   "df": 10.758362701784678,
+   "p_beyond_margin": 0.0001374561897436392,
+   "passes": true
+  }
+ }
+}
