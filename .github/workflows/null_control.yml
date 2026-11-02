@@ -1,0 +1,25 @@
+name: null-control
+on:
+  workflow_dispatch:
+
+jobs:
+  nulls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - run: python -m study.null_control
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nulls
+          path: study/nulls

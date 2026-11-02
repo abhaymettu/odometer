@@ -107,6 +107,10 @@ def markdown(s, smoke):
     lines += ["", "| Attempt | Claim | Base | Claimed gain | Verified gain | 95% half-width | p | Outcome | Record | Seed-runs before |", "|---|---|---|---|---|---|---|---|---|---|"]
     for t in s["claims_table"]:
         lines.append(f"| {t['attempt']} | {t['n']} | {t['base']} | {fmt(t['claimed_gain'])} | {fmt(t['gain'])} | {fmt(t['ci95'])} | {fmt(t['p'], 3)} | {t['outcome']} | {t['record']} | {t['seed_runs_before']} |")
+    if s.get("pilots"):
+        lines += ["", "Pilots ran before the series was registered and count toward nothing above.", ""]
+        lines += [f"- {t['attempt']} claim {t['n']}: {t['base']}, claimed {fmt(t['claimed_gain'])}, verified {fmt(t['gain'])}, {t['outcome']}, record {t['record']}"
+                  for t in s["pilots"]]
     return "\n".join(lines) + "\n"
 
 
@@ -115,15 +119,16 @@ def main():
     ap.add_argument("--smoke", action="store_true", help="read the smoke tree instead")
     args = ap.parse_args()
     place = layout(args.smoke)
-    rows = []
+    rows, pilots = [], []
     for d in sorted(p for p in place.attempts.glob("*") if p.is_dir()):
         attempt = read_json(d / "attempt.json") if (d / "attempt.json").exists() else None
         result = read_json(d / "result.json") if (d / "result.json").exists() else None
         if attempt and attempt["smoke"] != args.smoke:
             sys.exit(f"{d} is from a different kind of run than this tree: smoke={attempt['smoke']}")
-        rows.append({"id": d.name, "attempt": attempt, "result": result})
+        (pilots if d.name.startswith("pilot-") else rows).append({"id": d.name, "attempt": attempt, "result": result})
     summary = summarize(rows)
     summary["smoke"] = args.smoke
+    summary["pilots"] = summarize(pilots)["claims_table"]
     summary["null_control"] = {}
     for d in sorted(p for p in place.nulls.glob("*") if p.is_dir()):
         outcomes = [read_json(p) for p in sorted(d.glob("*/outcome.json"))]

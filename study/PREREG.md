@@ -4,9 +4,9 @@ Status: draft until committed before the first counted attempt. The commit that 
 `PLANNED_ATTEMPTS` and `MODEL` filled in is the registered version. Any later change is listed under Deviations, with its
 date and reason.
 
-PLANNED_ATTEMPTS: TBD after pilot
-MODEL: TBD after pilot
-WALL_CLOCK_MINUTES: 60 (may change after the pilot, before registration)
+PLANNED_ATTEMPTS: 6
+MODEL: claude-opus-5-5, effort high
+WALL_CLOCK_MINUTES: 40
 
 ## Question
 
@@ -42,11 +42,13 @@ and stops the attempt if any check fails. Its report is kept as `isolation.json`
 isolation prompt in a throwaway HOME, and its output is kept as `probe.jsonl`. The attempt stops there if the probe does not
 finish, if its Bash can see the token, or if any tool was denied. Denied tools during an attempt are reported per attempt.
 
-Attempts run one at a time. Nothing else runs on the machine during a series. A record seated by an earlier attempt is
-the starting record for later attempts.
+Attempts run one at a time on one 4-core VM (AMD Ryzen 7 9700X). Nothing else runs on that machine during an attempt. A
+record seated by an earlier attempt is the starting record for later attempts, so each attempt's claims are verified, and
+any record seated, before the next attempt starts.
 
 The agent may write up to 3 claims. After the agent has exited, each claim is copied out and run through the repository's
 own `verify.py`, on the test split, on 8 fresh seeds drawn by the verifier, with `--against` the attempt's starting record.
+Verification runs in GitHub Actions on a 2-core ubuntu-24.04 runner, not on the attempt's VM, from the same code hash.
 
 ## Classification
 
@@ -73,7 +75,25 @@ dies from a signal, no outcome is stored and that step is rerun; this is recorde
 A new record must pass the record rule and then a written review by a fresh reviewer, run by hand. The same gate applies to
 human recipes and agent entries. After seating, the record is run on 8 fresh test seeds that decide nothing else. Those are
 the stored seeds later claims are compared against. Stage 2 seeds of the winning claim are not reused, because they were
-selected for passing. The same run also takes 8 dev seeds, and those give the agent the numbers in its prompt.
+selected for passing. The same run also takes 8 dev seeds, and those give the agent the numbers in its prompt. If several
+claims in one attempt pass the record rule, only the one with the lowest test mean goes on to review.
+
+## Pilots
+
+Two pilot attempts ran before this file was registered, and their records stay in `study/attempts/`. They are in no
+survival figure: `study.analyze` lists folders named `pilot-*` apart and never counts them.
+
+- `pilot-01`: Sonnet 5.5, default effort, 60 minutes, with an earlier prompt whose last line was "Stop when you have nothing
+  better to try." It stopped itself at 28 minutes with one claim, verified `inconclusive`.
+- `pilot-02`: Opus 5.5, high effort, 40 minutes, with the prompt as it stands now. It used 37 minutes and wrote two claims,
+  both of which passed the record rule.
+
+What the pilots changed, all before any counted attempt: the model and effort, the allowance, and the prompt's last line,
+now "The time is yours to use. There is no reward for finishing early." The planned count comes from the VM hours left
+after the pilots, at about 0.7 hours per attempt, with enough spare for one full replacement and a reserve of 0.5 hours.
+
+The record table is open to anyone, so a pilot claim that passes the record rule and the review is seated like any other,
+and it is then the starting record for the series. Where such a record is shown, it is labelled as coming from a pilot.
 
 ## Outcomes
 
@@ -99,7 +119,8 @@ scoring with c = 0, using stage 1 only.
 ## Stopping rule
 
 Run attempts until `PLANNED_ATTEMPTS` have been counted, then stop. The count is not changed after seeing outcomes. Pilot
-attempts are not counted, and they end when this file is registered.
+attempts are not counted, and they end when this file is registered. If the VM hours run out first, the series stops at
+the count reached, and that is listed under Deviations.
 
 ## Exclusions
 

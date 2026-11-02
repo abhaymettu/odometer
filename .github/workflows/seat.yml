@@ -1,0 +1,47 @@
+name: seat
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: record folder name, such as 06-mixer-fold
+        required: true
+      entry:
+        description: path of the train.py to seat
+        required: true
+      review:
+        description: path of the written review
+        required: true
+      verdict:
+        description: path of the verify log that passed the record rule
+        required: true
+      source:
+        description: who or what wrote the entry
+        required: true
+
+jobs:
+  seat:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - name: Measure on 8 dev and 8 test seeds, and seat
+        env:
+          NAME: ${{ inputs.name }}
+          ENTRY: ${{ inputs.entry }}
+          REVIEW: ${{ inputs.review }}
+          VERDICT: ${{ inputs.verdict }}
+          SOURCE: ${{ inputs.source }}
+        run: python -m study.ladder "$NAME" "$ENTRY" --review "$REVIEW" --verdict "$VERDICT" --source "$SOURCE"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seated
+          path: records
