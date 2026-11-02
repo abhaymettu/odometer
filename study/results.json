@@ -1,44 +1,44 @@
 {
  "attempts": {
-  "started": 4,
-  "counted": 4,
+  "started": 5,
+  "counted": 5,
   "excluded": [],
   "pending": [],
   "with_no_claims": 0,
   "with_tool_denials": 0
  },
  "claims": {
-  "total": 4,
-  "replicated": 4,
+  "total": 5,
+  "replicated": 5,
   "refuted": 0,
   "inconclusive": 0,
   "rejected": 0
  },
  "survival_per_claim": {
-  "k": 4,
-  "n": 4,
+  "k": 5,
+  "n": 5,
   "rate": 1.0,
-  "lo": 0.5101091596030786,
-  "hi": 0.9999999999999999
+  "lo": 0.5655175313406071,
+  "hi": 1.0
  },
  "survival_per_attempt": {
-  "k": 4,
-  "n": 4,
+  "k": 5,
+  "n": 5,
   "rate": 1.0,
-  "lo": 0.5101091596030786,
-  "hi": 0.9999999999999999
+  "lo": 0.5655175313406071,
+  "hi": 1.0
  },
  "shrinkage": {
-  "n": 4,
-  "median": 1.0229539150144231,
-  "min": 0.9554518356427101,
+  "n": 5,
+  "median": 1.0047378736245687,
+  "min": 0.8609002442287911,
   "max": 1.0903968572691354,
   "left_out_no_claimed_gain": 0
  },
- "records": 3,
+ "records": 4,
  "seed_runs_per_claim": {
-  "n": 4,
-  "median": 14.5,
+  "n": 5,
+  "median": 16,
   "min": 8,
   "max": 44
  },
@@ -63,6 +63,13 @@
    "n": 2,
    "rate": 1.0,
    "lo": 0.3423802239546494,
+   "hi": 1.0
+  },
+  "09-mixer-words": {
+   "k": 1,
+   "n": 1,
+   "rate": 1.0,
+   "lo": 0.2065493117918027,
    "hi": 1.0
   }
  },
@@ -114,6 +121,18 @@
    "outcome": "replicated",
    "record": true,
    "seed_runs_before": 44
+  },
+  {
+   "attempt": "attempt-05",
+   "n": 1,
+   "base": "09-mixer-words",
+   "claimed_gain": 0.005486632112986278,
+   "gain": 0.004723442926063415,
+   "ci95": 0.001281334175158442,
+   "p": 1.273720466215143e-06,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 16
   }
  ],
  "smoke": false,
@@ -197,6 +216,27 @@
     "hi": 0.06419393766646092
    },
    "stored_offset_in_se": -0.025114975558808008
+  },
+  "08-mixer-gate": {
+   "nulls": 8,
+   "false_replicated": {
+    "k": 0,
+    "n": 8,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.3244075683414076
+   },
+   "false_refuted": 1,
+   "rejected": 0,
+   "stage1_passes": 0,
+   "pairwise_false_positives": {
+    "k": 0,
+    "n": 56,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.06419393766646092
+   },
+   "stored_offset_in_se": -2.0764312336894566
   }
  }
 }
