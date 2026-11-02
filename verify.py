@@ -211,6 +211,13 @@ def load_entry(path, track):
     return module
 
 
+def peak_rss_mb():
+    import resource
+
+    kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return kb / 1024 ** (2 if sys.platform == "darwin" else 1)
+
+
 def count_python_work(entry, cap, violation):
     """Deterministic fence on Python outside the engine: every line and jump of the entry costs one count."""
     mon, events = sys.monitoring, sys.monitoring.events
@@ -265,7 +272,7 @@ def child_train(entry, seed, out):
             np.savez(out / "params.npz", **{f"p{i}": v._d for i, v in enumerate(params.values())})
             (out / "names.json").write_text(json.dumps(list(params)))
     report = {"status": status, "train_ticks": _engine._M.used, "train_seconds": seconds, "item_reads": _engine._M.items,
-              "train_python_lines": lines[0], "params": sum(v.size for v in params.values()) if status == "ok" else None}
+              "train_python_lines": lines[0], "peak_rss_mb": peak_rss_mb(), "params": sum(v.size for v in params.values()) if status == "ok" else None}
     (out / "train.json").write_text(json.dumps(report))
 
 

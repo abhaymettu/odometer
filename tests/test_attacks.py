@@ -15,7 +15,7 @@ import verify
 ROOT = pathlib.Path(verify.__file__).resolve().parent
 ATTACKS = ROOT / "tests" / "attacks"
 SEED = 11
-HONEST_TICKS = 205_292_960  # the shared 40-step bigram training, priced by hand in test_honest_training_price
+HONEST_TICKS = 205_374_880  # the shared 40-step bigram training, priced by hand in test_honest_training_price
 TWIN_FAILED = r"void: twin check failed \(logits before the cut moved by \d\.\d\de[-+]\d\d nats\)"
 LINE_CAP = "void: rule violation: more than 20000000 Python lines and jumps in the entry"
 BAD_LOGITS = "void: rule violation: forward() must return float logits of shape (batch, 512, 256)"
@@ -128,7 +128,7 @@ def test_command_line_exits_2_on_static_failure(name, line, tmp_path):
 # ---------------------------------------------------------------- past the static rules, voided by the child processes
 
 VOIDED = {
-    "budget_runs_out": "void: BudgetExhausted escaped train() (budget 2.000e+09 reached at 1.997e+09)",
+    "budget_runs_out": "void: BudgetExhausted escaped train() (budget 2.000e+09 reached at 1.998e+09)",
     "budget_huge_final_op": "void: BudgetExhausted escaped train() (budget 2.000e+09 reached at 2.503e+07)",
     "budget_arange_refund": "void: BudgetExhausted escaped train() (budget 2.000e+09 reached at 1.994e+09)",
     "budget_range_index": "void: rule violation: indexing takes ints, slices, None and ...; use embedding() to gather",
@@ -230,7 +230,7 @@ def test_sub_tolerance_bonus_is_a_real_gain(tmp_path):
 def test_honest_training_price():
     # 40 steps of (batch, embedding, cross_entropy, backward, mul, sub, update), then the 256 x 256 table setup
     batch = 2 * 2000 + 64 * 16 + 16 * 64
-    embedding = 2000 + 6 * 1024 + 1024 * 256 // 4
+    embedding = 2000 + 8 * 1024 + 1024 * 256 // 4
     cross_entropy = 2 * 2000 + 2 * 1024 * 256
     backward = (2 * 2000 + 1024 * 256) + (2 * 2000 + 16 * 1024 * 256 + 65536 // 16)
     step = batch + embedding + cross_entropy + backward + (2000 + 65536 // 4) * 3
@@ -272,9 +272,9 @@ def test_param_copy_is_charged(tmp_path):
 def test_thin_matmul_costs_what_a_multiply_costs(tmp_path):
     _, seed, _ = smoke("budget_thin_matmul", tmp_path)
     setup = (2000 + (1 << 20) // 16) + 2000
-    products = 10 * (2000 + (1 << 20) * 64 // 128 + 256)
+    products = 10 * (2000 + (1 << 20) * 8 * 64 // 128 + 256)
     table = (2000 + 65536 // 16) + (2000 + 65536 // 4)
-    assert seed["train_ticks"] == setup + products + table == 5_359_456
+    assert seed["train_ticks"] == setup + products + table == 42_059_616
 
 
 # ---------------------------------------------------------------- the control
@@ -283,7 +283,7 @@ def test_honest_entry_passes_end_to_end(tmp_path):
     proc, seed, _ = smoke("legit_tiny", tmp_path)
     assert proc.returncode == 0
     assert seed["status"] == "ok"
-    assert seed["train_ticks"] == 513_195_680
+    assert seed["train_ticks"] == 513_400_480
     assert seed["twin_max_diff"] == 0.0
     assert seed["params"] == 65536
     assert 3.0 < seed["bpb"] < 4.5  # far below the 8.0 of a uniform guess, and above what a bigram can do on any machine
