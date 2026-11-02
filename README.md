@@ -105,14 +105,21 @@ python verify.py entries/mine/train.py --against records/current.json
 
 Claimed gains did not visibly shrink: median verified over claimed 0.996, 4 of 7 below 1, range 0.86 to 1.09. The plan set no threshold, and shrinkage cannot be resolved at this size. Opus was chosen for the series after its pilot passed and Sonnet's pilot claim did not.
 
-Every score reads the same 1024 windows, so every plus-minus here covers seed noise on those windows only. As a check, each record from 05 on was rescored on the next 1024 test windows, which no score had read, on 8 new seeds. Gains from record ? to the current one: ? on the usual windows and ? on the new ones. For the last record alone: ? and ?.
+Every score reads the same 1024 windows, so every plus-minus here covers seed noise on those windows only. As a check, each record from 05 on was rescored on the next 1024 test windows, which no score had read, on 8 new seeds. Gains from record 05 to the current one: 0.0665 on the usual windows and 0.0663 on the new ones. For the last record alone: 0.0041 and 0.0043.
 
 | Record | Usual 1024 windows | Next 1024 windows | Difference |
 |---|---|---|---|
+| Hashed context mixing | 1.1555 | 1.1550 | -0.0004 |
+| Mixing, folded head, lazy tables | 1.1444 | 1.1442 | -0.0003 |
+| Mixing, cold-start fix | 1.1255 | 1.1259 | +0.0004 |
+| Mixing, learned in-window gate | 1.1069 | 1.1062 | -0.0007 |
+| Mixing, words and story boundaries | 1.0976 | 1.0974 | -0.0001 |
+| Mixing, gate fitted on fresh bytes | 1.0931 | 1.0930 | -0.0000 |
+| Mixing, thinner high-order tables, cheaper gate | 1.0890 | 1.0887 | -0.0002 |
 
-Each record also needs a written review from a fresh Claude session, which reads the code and logs and has to say what buys the gain. A review can refuse a record, but none has: all six on agent records returned real, even the one that found the agent's account of its own change wrong. The briefs are in [study/reviews.md](study/reviews.md). What each one wrote is in `records/<name>/review.md`.
+Each record also needs a written review from a fresh Claude session, which reads the code and logs and has to say what buys the gain. Much of the gain is tied to this track: about a third of record 07's gain (0.0061 of 0.0187, one seed, dev) sits in the first 16 of 512 positions of a window, and about three quarters of the gain in attempt-04's record 09 is eval-time modelling, paid for with 36.5% more eval ticks. A review can refuse a record, but none has: all six on agent records returned real, even the one that found the agent's account of its own change wrong. The briefs are in [study/reviews.md](study/reviews.md). What each one wrote is in `records/<name>/review.md`.
 
-As a check on the pipeline, each starting record went through it unchanged, 8 times over: 0 false positives in 32 runs across 4 records, which catches a broken pipeline and nothing finer. 1 run came back refuted, on record 08, whose stored batch of 8 seeds sits about 2.1 standard errors below the mean of its nulls, so gains measured against that record read about 0.0005 low. The sessions cost $2.21 to $4.49 each at list price.
+As a check on the pipeline, each starting record went through it unchanged, 8 times over: 0 false positives in 40 runs across 5 records, which catches a broken pipeline and nothing finer. 1 run came back refuted, on record 08, whose stored batch of 8 seeds sits about 2.1 standard errors below the mean of its nulls, so gains measured against that record read about 0.0005 low. The sessions cost $2.21 to $4.49 each at list price.
 <!-- /agents -->
 
 The plan, the count and the classification rule were committed before the first counted attempt: [study/PREREG.md](study/PREREG.md). Each agent's whole session is in `study/attempts/<id>/`.

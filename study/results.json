@@ -289,6 +289,27 @@
     "hi": 0.06419393766646092
    },
    "stored_offset_in_se": 0.40985963055482555
+  },
+  "10-mixer-fresh": {
+   "nulls": 8,
+   "false_replicated": {
+    "k": 0,
+    "n": 8,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.3244075683414076
+   },
+   "false_refuted": 0,
+   "rejected": 0,
+   "stage1_passes": 0,
+   "pairwise_false_positives": {
+    "k": 0,
+    "n": 56,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.06419393766646092
+   },
+   "stored_offset_in_se": -0.5622399464324699
   }
  }
 }

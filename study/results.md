@@ -23,6 +23,7 @@
 | Null control on 07-mixer-cold | 8 nulls: false replicated 0/8 (Wilson 95% 0.000 to 0.324); false refuted 0; stage 1 passes 0; batch against batch 0/56 (Wilson 95% 0.000 to 0.064); stored batch offset -0.03 SE |
 | Null control on 08-mixer-gate | 8 nulls: false replicated 0/8 (Wilson 95% 0.000 to 0.324); false refuted 1; stage 1 passes 0; batch against batch 0/56 (Wilson 95% 0.000 to 0.064); stored batch offset -2.08 SE |
 | Null control on 09-mixer-words | 8 nulls: false replicated 0/8 (Wilson 95% 0.000 to 0.324); false refuted 0; stage 1 passes 0; batch against batch 0/56 (Wilson 95% 0.000 to 0.064); stored batch offset +0.41 SE |
+| Null control on 10-mixer-fresh | 8 nulls: false replicated 0/8 (Wilson 95% 0.000 to 0.324); false refuted 0; stage 1 passes 0; batch against batch 0/56 (Wilson 95% 0.000 to 0.064); stored batch offset -0.56 SE |
 
 | Attempt | Claim | Base | Claimed gain | Verified gain | 95% half-width | p | Outcome | Record | Seed-runs before |
 |---|---|---|---|---|---|---|---|---|---|

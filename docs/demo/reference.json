@@ -1,1 +1,1 @@
-{"budget": 2000000000, "reading": 1986115958, "bpb": 1.4405510191719824, "rows": [{"machine": "M4 Pro, native", "train_seconds": 1.4611133750004228}]}
+{"budget": 2000000000, "reading": 1986115958, "bpb": 1.4405510191719824, "rows": [{"machine": "M4 Pro, native", "train_seconds": 1.4423909170000115}, {"machine": "Ryzen 9700X, native", "train_seconds": 2.978186527999924}]}

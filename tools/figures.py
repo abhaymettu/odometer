@@ -51,7 +51,7 @@ def spread(ys, gap):
 
 
 SWEEP_NAMES = {"01-gpt": ("Small GPT", "circle", "p"), "02-rnn": ("Character RNN", "square", "h"), "03-modern": ("Modern transformer", "triangle", "p"),
-               "04-ppm": ("PPM", "square", "p"), "05-mixer": ("Hashed mixing", "circle", "h"), "06-mixer-fold": ("Record 06, an agent's", "diamond", "pa")}
+               "04-ppm": ("PPM", "square", "p"), "05-mixer": ("Hashed mixing", "circle", "h"), "06-mixer-fold": ("Record 06, an agent's", "diamond", "pa"), "11-mixer-thin": ("Record 11, an agent's", "diamond", "pa")}
 
 
 def sweep():
