@@ -1,0 +1,35 @@
+name: verify-claims
+on:
+  workflow_dispatch:
+    inputs:
+      attempt:
+        description: attempt id under study/attempts
+        required: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - name: Rerun the attempt's claims on fresh seeds
+        env:
+          ATTEMPT: ${{ inputs.attempt }}
+        run: |
+          mkdir -p ~/att/"$ATTEMPT"
+          tar xzf study/attempts/"$ATTEMPT"/work.tar.gz -C ~/att/"$ATTEMPT"
+          python -m study.verify_claims "$ATTEMPT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ inputs.attempt }}-verified
+          path: study/attempts/${{ inputs.attempt }}

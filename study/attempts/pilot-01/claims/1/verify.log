@@ -1,0 +1,13 @@
+1: 8 seeds on test, 4 at a time, budget 4.0e+10 ticks
+  seed 1049214332  test bpb 1.1537  train 3.996e+10 ticks   179.8 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed  449912610  test bpb 1.1560  train 3.996e+10 ticks   181.0 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed  711145221  test bpb 1.1556  train 3.996e+10 ticks   179.6 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed 2028613341  test bpb 1.1556  train 3.996e+10 ticks   179.0 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed   14016818  test bpb 1.1549  train 3.996e+10 ticks   216.4 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed  979128616  test bpb 1.1564  train 3.996e+10 ticks   218.0 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed  884112635  test bpb 1.1541  train 3.996e+10 ticks   212.6 s  eval 11,153 ticks/byte  twins 0.0e+00
+  seed 2007802391  test bpb 1.1545  train 3.996e+10 ticks   217.3 s  eval 11,153 ticks/byte  twins 0.0e+00
+  mean 1.1551 +- 0.0008 bpb (95% CI, n=8, sd 0.0009)
+  gain over the record: +0.0004 +- 0.0011 bpb, p = 1 (beyond a margin of 0.002)
+  not a record
+  log: study/attempts/pilot-01/claims/1/verify.json

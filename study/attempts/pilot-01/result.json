@@ -1,0 +1,60 @@
+{
+ "attempt": "pilot-01",
+ "smoke": false,
+ "base_record": "05-mixer",
+ "status": "finished",
+ "claims": [
+  {
+   "n": 1,
+   "seed_runs_before": 24,
+   "claimed_dev_bpb": 1.1557,
+   "n_seeds": 8,
+   "why": "The record entry with one change: LR_TABLE raised from 0.25 to 0.4 (AdaGrad rate for the hashed context tables). Measured 1.1557 mean over 8 dev seeds (sd 0.0008) against the record's 1.1566. The gain is about 0.001 bpb, so it probably does not clear the 0.002 record margin. Tried and rejected: extra or different PPM window stages (worse), LR_MIX 4e-3 / 9e-3 (worse or equal), LR_TABLE 0.7 (equal to baseline).",
+   "sha256": "ffc2224197ef7f8bd3bb6a4768c5e65ed2c6e47955caa9f7a312801159771d5d",
+   "outcome": "inconclusive",
+   "gain": 0.0004451609315769822,
+   "ci95": 0.0010564207421734403,
+   "ci_upper": 0.0015015816737504225,
+   "p": 0.1905478559309785,
+   "df": 13.85215002005981,
+   "claimed_gain": 0.0009382848604599925,
+   "record": false,
+   "bpbs": [
+    1.1537308762955258,
+    1.1559507558866688,
+    1.1555537518424164,
+    1.1555760206162546,
+    1.1548858888778233,
+    1.1564012254190899,
+    1.1541232135156785,
+    1.1545034929356772
+   ],
+   "seeds": [
+    1049214332,
+    449912610,
+    711145221,
+    2028613341,
+    14016818,
+    979128616,
+    884112635,
+    2007802391
+   ],
+   "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+   "verdict": {
+    "against": "/home/user/odometer/study/attempts/pilot-01/base.json",
+    "margin": 0.002,
+    "alpha": 0.01,
+    "stage1": {
+     "gain": 0.0004451609315769822,
+     "ci95": 0.0010564207421734403,
+     "df": 13.85215002005981,
+     "p_beyond_margin": 0.9964838532923248,
+     "passes": false
+    },
+    "record": false
+   }
+  }
+ ],
+ "ignored": [],
+ "seed_runs_total": 24
+}
