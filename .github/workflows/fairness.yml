@@ -1,0 +1,37 @@
+name: fairness
+on:
+  workflow_dispatch:
+    inputs:
+      entry:
+        default: records/06-mixer-fold/train.py
+      seeds:
+        description: the same comma list on every machine
+        required: true
+
+jobs:
+  run:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - env:
+          ENTRY: ${{ inputs.entry }}
+          SEEDS: ${{ inputs.seeds }}
+        run: python verify.py "$ENTRY" --seeds "$SEEDS" --split dev --out out/${{ matrix.os }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fair-${{ matrix.os }}
+          path: out/${{ matrix.os }}.json
