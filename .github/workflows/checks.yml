@@ -29,8 +29,14 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install numpy==2.5.4
-      - run: python tools/calibrate.py --json calibrate-x86.json || true
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - run: python tools/calibrate.py --json calibrate-x86.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: calibrate-x86
           path: calibrate-x86.json
