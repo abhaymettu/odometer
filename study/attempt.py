@@ -47,8 +47,8 @@ def render_prompt(record, minutes):
     return text
 
 
-def claude_args(prompt, model):
-    return ["claude", "-p", prompt, "--model", model, "--permission-mode", "bypassPermissions", "--allowedTools", ",".join(ALLOWED_TOOLS),
+def claude_args(prompt, model, effort="high"):
+    return ["claude", "-p", prompt, "--model", model, "--effort", effort, "--permission-mode", "bypassPermissions", "--allowedTools", ",".join(ALLOWED_TOOLS),
             "--output-format", "stream-json", "--verbose"]
 
 

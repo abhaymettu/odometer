@@ -21,4 +21,4 @@ claim.json has three fields: claimed_dev_bpb (float), n_seeds (int), why (one pa
 
 Each claim will be rerun by an independent verifier on {{verifier_seeds}} fresh seeds, on a sealed split, on a pristine copy of the code. Every claim's outcome will be published, whether it survives or not. Editing your copy of verify.py or odometer changes nothing.
 
-Stop when you have nothing better to try.
+The time is yours to use. There is no reward for finishing early.

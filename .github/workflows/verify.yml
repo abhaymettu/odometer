@@ -1,0 +1,48 @@
+name: verify
+on:
+  workflow_dispatch:
+    inputs:
+      entry:
+        description: path of the train.py to rerun
+        required: true
+      seeds:
+        description: a count of fresh seeds, or a comma list
+        default: "8"
+      split:
+        default: test
+      against:
+        description: record log to test against (optional)
+        default: ""
+      name:
+        description: name for the log artifact
+        default: run
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - name: Rerun on fresh seeds
+        env:
+          ENTRY: ${{ inputs.entry }}
+          SEEDS: ${{ inputs.seeds }}
+          SPLIT: ${{ inputs.split }}
+          AGAINST: ${{ inputs.against }}
+        run: |
+          mkdir -p ci-out
+          python verify.py "$ENTRY" --seeds "$SEEDS" --split "$SPLIT" ${AGAINST:+--against "$AGAINST"} --out ci-out/log.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ inputs.name }}
+          path: ci-out
