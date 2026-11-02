@@ -185,7 +185,7 @@ def paper(values, claims, fair_table, fresh_table, fresh_head):
     macro = lambda key: "v" + key.replace("_", "").replace("003", "OOO").replace("004", "OOF")
     (out / "numbers.tex").write_text("".join(rf"\newcommand{{\{macro(k)}}}{{{tex_value(v)}}}" + "\n" for k, v in values.items()))
     (out / "claims.tex").write_text(tex_table(CLAIMS_HEAD, claims_rows(claims), "lllllc"))
-    (out / "fair.tex").write_text(tex_table(FAIR_HEAD, fair_rows(fair_table), "lcccc"))
+    (out / "fair.tex").write_text(tex_table(FAIR_HEAD, fair_rows(fair_table), "p{4.6cm}cccc"))
     (out / "fresh.tex").write_text(tex_table(fresh_head, fresh_table, "lccc"))
 
 
