@@ -12,6 +12,8 @@ Every tensor operation costs ticks, priced from its shape alone. An entry gets 4
 
 **[Run the record in your browser](https://abhaymettu.github.io/odometer/)**. It takes about half a minute, and the page shows your device stopping at the same tick as every other.
 
+The [write-up](https://abhaymettu.com/research/odometer/) tells the story, and [the paper](https://doi.org/10.5281/zenodo.23899728) has the method and the results.
+
 ## Try it
 
 You need Python 3.12 or newer.
@@ -173,6 +175,12 @@ The single `train.py` and the bits-per-byte framing come from [karpathy/autorese
 
 Recipes credit their authors in each file: nanoGPT (Karpathy), char-rnn (Karpathy) and GRU (Cho et al.), modded-nanogpt (Jordan et al.), PPM (Cleary and Witten; Moffat), PAQ and lpaq (Mahoney), cmix (Knoll). Data: TinyStories (Eldan and Li, 2023), CDLA-Sharing-1.0.
 
+## Citation
+
+Mettu, A. (2026). odometer: a training speedrun metered per operation, with coding agents on the record table. Zenodo. https://doi.org/10.5281/zenodo.23899728
+
+That DOI is version 1, and https://doi.org/10.5281/zenodo.23899727 always resolves to the latest version. The same PDF is at [`paper/odometer.pdf`](paper/odometer.pdf).
+
 ## Layout
 
 ```
@@ -186,4 +194,4 @@ tools/             calibration, budget sweep, fairness, figures, page build
 docs/              the page, and the in-browser demo
 ```
 
-MIT licence. The data keeps its own.
+MIT licence. The data keeps its own, and the paper on Zenodo is under CC BY 4.0.

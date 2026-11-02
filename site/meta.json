@@ -29,6 +29,14 @@
     {
       "label": "Run the record in your browser",
       "href": "https://abhaymettu.github.io/odometer/"
+    },
+    {
+      "label": "Paper",
+      "href": "https://github.com/abhaymettu/odometer/blob/main/paper/odometer.pdf"
+    },
+    {
+      "label": "DOI",
+      "href": "https://doi.org/10.5281/zenodo.23899728"
     }
   ],
   "site": {
