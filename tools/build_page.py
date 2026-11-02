@@ -103,6 +103,21 @@ def put(text, key, body):
     return re.sub(rf"<!-- {key} -->.*?<!-- /{key} -->", lambda m: f"<!-- {key} -->\n{body}\n<!-- /{key} -->", text, flags=re.S)
 
 
+def tex_table(head, rows, spec):
+    esc = lambda c: str(c).replace("_", r"\_").replace("%", r"\%").replace("±", r"$\pm$")
+    lines = [rf"\begin{{tabular}}{{{spec}}}", r"\toprule", " & ".join(map(esc, head)) + r" \\", r"\midrule"]
+    return "\n".join(lines + [" & ".join(map(esc, r)) + r" \\" for r in rows] + [r"\bottomrule", r"\end{tabular}"]) + "\n"
+
+
+def paper(values, claims, fair_table):
+    """Everything numeric in the paper comes through paper/numbers.tex and the two generated tables."""
+    out = ROOT / "paper"
+    macro = lambda key: "v" + key.replace("_", "")
+    (out / "numbers.tex").write_text("".join(rf"\newcommand{{\{macro(k)}}}{{{v.replace('_', chr(92) + '_').replace('%', chr(92) + '%')}}}" + "\n" for k, v in values.items()))
+    (out / "claims.tex").write_text(tex_table(CLAIMS_HEAD, claims_rows(claims), "lllllc"))
+    (out / "fair.tex").write_text(tex_table(FAIR_HEAD, fair_rows(fair_table), "lcccc"))
+
+
 def main():
     rows = records()
     head = rows[0]
@@ -124,6 +139,10 @@ def main():
     for key, body in copy["readme"].items():
         readme = put(readme, key, fill(body, values | tables))
     (ROOT / "README.md").write_text(readme)
+    agent_rows = sum(r["source"].startswith("agent") for r in rows)
+    template = ROOT / "site/writeup.in.md"
+    (ROOT / "site/writeup.md").write_text(fill(template.read_text(), values | {"agent_records": str(agent_rows)}))
+    paper(values, claims, fair_table)
     print(f"{len(rows)} records, current {head['name']} {head['test']:.4f}")
 
 

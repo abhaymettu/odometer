@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,booktabs,graphicx,amsmath,xurl}
+\usepackage[hidelinks]{hyperref}
+\input{numbers.tex}
+\title{odometer: a training speedrun metered per operation, with coding agents on the record table}
+\author{Abhay Mettu\\\small\url{https://github.com/abhaymettu/odometer}}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Training speedruns score wall-clock time, so a record measures the idea and the hardware together and a number from one machine means little on another. odometer replaces the clock with a meter. Every tensor operation costs ticks, priced from its shape alone and calibrated to be close to time, and an entry gets $4\times10^{10}$ ticks to train a byte-level model on TinyStories. The same program reaches the same reading on every machine: across \vfairmachines{} machines tick counts were identical and held-out scores differed by at most \vfairmax{} bits per byte, about \vfairratio{} times below the margin a record has to clear. A verifier small enough to read reruns each entry on fresh seeds on a sealed split, and \vattacks{} entries written to cheat pin how it fails and where it still has holes. On this track I ran a preregistered series of \vattempts{} isolated Claude Code sessions. \vsurvived{} of \vclaims{} claims replicated on fresh sealed seeds (Wilson 95\% interval \vclaimlo{} to \vclaimhi{}), \vrecords{} became records after a written review, and claimed gains did not shrink (median verified over claimed \vshrink{}). I found no earlier training budget metered per operation for a public record track. Survival of agent claims has been measured before, and this series adds a further, small measurement on an open table.
+\end{abstract}
+
+\section{The problem with a clock}
+A training speedrun needs a budget, and every common budget has a problem. Wall-clock limits tie results to hardware, as the README of karpathy/autoresearch says of its own five-minute runs, which ``become not comparable to other people running on other compute platforms''. Standardized hardware fixes comparability at the price of access: modded-nanogpt and OpenAI's Parameter Golf run on eight H100s, and MLCommons AlgoPerf fixes its own accelerators. A step count, as in modded-nanogpt's optimization track, is free of hardware but only works with the model held fixed.
+
+The obvious replacement, counting floating-point operations, fails in practice. BLAS runs about a hundred times more FLOPs per second than \texttt{exp}, so an entry heavy on elementwise work would take a hundred times longer for the same reading, and an agent would find that gap quickly. odometer prices operations close to their real cost instead, from shapes alone, so that the reading is a pure function of the program and no entry is much slower than its reading suggests.
+
+\section{The track}
+An entry is one Python file with \texttt{train(data)} and \texttt{forward(params, x)}, written against a small tensor engine with reverse-mode gradients. Each call advances one global odometer. A tick is about one nanosecond of one laptop core. Prices depend only on shapes: for example, a matmul of $(m,k)$ by $(k,n)$ costs $\max(m,8)\max(k,64)\max(n,8)/128$ plus a constant per batch element, cheap elementwise work costs one tick per four elements, and \texttt{exp} and \texttt{log} cost one tick per element. When a charge would pass the budget, the operation raises and every later operation raises too.
+
+The score is held-out bits per byte on 1024 windows of 512 bytes from TinyStories V2 \cite{tinystories}, split into a dev pool and a sealed test pool. One seed takes between about 40 seconds and three minutes on a 2-core CI runner, so a record can be checked at home. The number of bytes read, the model family and the optimizer are all the entry's choice.
+
+Prices are close to time and not equal to it. Against the median, 331 of 335 calibration rows on x86 sit within a factor of 5. A copying \texttt{reshape} and its backward run about 7 times over their price, and squaring and \texttt{embedding} run about 6 to 7 times under theirs. I froze the prices once records stood on them, so a misprice is disclosed and not fixed, and any later change would need a new version of the track and a new table.
+
+\section{Same program, same reading}
+Ticks must match exactly across machines. Scores pass through each machine's BLAS, so they may differ in the last digits. I ran the same \vfairseeds{} seeds of the current record on each machine, and compared each with a reference by a paired equivalence test (TOST) against a tolerance of $\pm\vtolerance$ bits per byte. Table~\ref{tab:fair} is generated from the logs.
+
+\begin{table}[h]\centering\small
+\input{fair.tex}
+\caption{The same seeds of the current record, each machine against the reference (\vfairreference). Ticks are train and eval ticks per byte.}\label{tab:fair}
+\end{table}
+
+The demo on the project page runs the current record's unchanged code in a browser under Pyodide at a smaller budget, and it stopped at the same tick as native code. Its purpose is to show the property directly, and it is not a score.
+
+\section{What a rerun guarantees}
+\texttt{verify.py} is the referee. Training runs in its own process, which never loads held-out bytes, and scoring runs in a second, fresh one. Static rules limit an entry's imports to \texttt{odometer} and \texttt{math}, restrict the names it can use, and ration literals and syntax nodes so that a table cannot travel in the source. Python work outside the engine is counted in lines, and training reads through \texttt{item()} are rationed. A quarter of the scored windows have a twin that shares a prefix and differs after a random cut, and if the logits before the cut move, the entry was looking ahead or across rows and the run is void.
+
+A new record has to beat the holder by more than 0.002 bits per byte at one-sided Welch $p<0.01$ on 8 fresh seeds, repeat that on 8 new seeds, and then get a written review that explains what buys the gain. Stored incumbent numbers are 8 further fresh seeds that decide nothing else.
+
+The test suite holds \vattacks{} entries written to cheat: reading held-out bytes, looking ahead, keeping state between calls, getting compute for free, shipping data in the source, and breaking the verifier. A test pins the exact way each fails. Four still work, and they are pinned too. Three obtain compute for free: \texttt{sum(range(n))} is one counted line, Python big integers do vector arithmetic for almost no ticks, and a line of 2000 additions counts once. With only 20,000 reads of training data, that compute has little to learn from, though I infer this and did not measure it. The fourth is a look-ahead bonus under the twin tolerance, worth under $1.5\times10^{-4}$ bits per byte. There is no memory or disk cap, and because TinyStories is public, the seal on the test split stops accidents and not a determined entrant.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\linewidth]{fig/ladder.pdf}
+\caption{The record table. Circles are recipes ported from the literature and tuned on dev, and diamonds are agent entries. No person has run this track, so the recipes are baselines and not human records.}\label{fig:ladder}
+\end{figure}
+
+\section{An agent series}
+\paragraph{Design.} The plan, the count and the classification rule were committed before the first counted attempt (\texttt{study/PREREG.md}). Each attempt gave one Claude Code session Opus 5.5 at high effort, 40 minutes on a 4-core VM, and the current record to start from, in a filesystem view with an empty home, no user configuration, and a copy of the held-out data with every byte outside dev windows zeroed. It kept web access. The agent could write up to 3 claims. After it exited, each claim was rerun in CI on 8 fresh seeds on the test split. A claim is \emph{replicated} if the one-sided $p$ that the gain is positive is below 0.01, \emph{refuted} if not replicated and the interval's upper bound is below the claimed gain, \emph{rejected} if the verifier voids it, and otherwise \emph{inconclusive}. Attempts ran in sequence, and a seated record became the next starting point. Two pilots ran before registration and are reported apart. They changed the model, the allowance and the prompt's last line.
+
+\paragraph{Results.} \vsurvived{} of \vclaims{} claims replicated (Wilson 95\% interval \vclaimlo{} to \vclaimhi), and \vattemptsurvived{} of \vattempts{} attempts had a replicated claim. \vrecords{} became records. I registered the hypothesis that claimed gains shrink, and the data do not support it: the median of verified over claimed gain was \vshrink. These gains sit far above seed noise, where selection has little room to inflate anything, and that may not hold nearer the noise, where a related workshop study found gains stayed unresolved after 24 to 33 sealed runs \cite{lucky}. Table~\ref{tab:claims} and Figure~\ref{fig:claims} are generated from the claim logs. Each session cost \$\vcostlo{} to \$\vcosthi{} at list price, and all transcripts are public.
+
+\begin{table}[h]\centering\small
+\input{claims.tex}
+\caption{Every counted claim. Gains are in bits per byte, against the starting record's 8 stored test seeds.}\label{tab:claims}
+\end{table}
+
+\begin{figure}[h]\centering
+\includegraphics[width=\linewidth]{fig/claims.pdf}
+\caption{Claimed and verified gain for each claim, pilots included and labeled.}\label{fig:claims}
+\end{figure}
+
+\paragraph{Null control.} Each starting record went through the same pipeline unchanged, 8 times with 8 seeds each. That gave \vnullfalse{} false positives in \vnulln{} runs across \vnullrecords{} records, and 8 nulls per record can only catch a broken pipeline. \vnullrefuted{} run came back refuted, on a record whose stored batch sits about 2.1 standard errors below the mean of its nulls. This is the shared comparison batch limit named in the plan, and it means gains measured against that record read about 0.0005 low.
+
+\paragraph{What bought the gains.} No agent replaced the model. Hashed context mixing in the PAQ tradition \cite{paq} was already the best recipe at this budget, and each agent record works inside it, by fixing a padding artefact at the start of a window, replacing hand-set constants with a learned gate, adding word contexts, or fitting that gate on fresh bytes. Fresh Claude reviewers derived the mechanism of each record from its logs, and much of the gain is tied to this track. About a third of one record's gain sits in the first 16 of 512 positions of a window, and about three quarters of another's comes from spending 36.5\% more ticks at eval. Passing the record rule does not show that a gain generalizes or that the agent understood it. One review found the agent's own explanation was only half right.
+
+\section{Related work}
+The single \texttt{train.py} and the bits-per-byte framing come from karpathy/autoresearch. modded-nanogpt and Parameter Golf set the pattern of statistical record rules, with submitter-run logs, and Prime Intellect's autonomous speedrun has agents face a frozen verifier on eight fixed seeds. odometer differs in that the verifier draws fresh seeds and runs the test against the incumbent's stored seeds, on hardware the reader owns. The survival of agent claims has been measured before, in a nanoGPT setting where 8 of 15 non-null candidates replicated on sealed seeds \cite{lucky}, and the winner's curse has been measured for prompt-level self-improvement \cite{curse}. A recent audit of performance benchmarks shows how fragile wall-clock scoring is across machine types \cite{perfaudit}. The one property I found nowhere is a training budget metered per operation and independent of hardware for a public record track. That is absence of evidence from a limited search and not proof. The full check is in \texttt{review/novelty-and-exploits.md}.
+
+\section{Limits}
+The series measures one model, one prompt and one allowance on one corpus and one budget, with \vattempts{} attempts, so the interval is wide and it says nothing about agents in general. The record rule has limited power: 8 seeds against 8 passes a true gain of one seed standard deviation only 31\% of the time. The recipes were ported and tuned with a coding agent, and the reviews that decide a record come from fresh Claude sessions, not from human experts. No person has run the track, so nothing here compares agents with people.
+
+\paragraph{Disclosure.} This project was built with Claude Code under my direction, including the engine, the verifier, the recipes, the harness and drafts of this text. I am responsible for its claims. Code, logs, transcripts and every number's command are in the repository, and \texttt{python reproduce.py} reruns the current record from a clean clone.
+
+\begin{thebibliography}{9}\small
+\bibitem{tinystories} R.~Eldan and Y.~Li. TinyStories: How small can language models be and still speak coherent English? arXiv:2305.07759, 2023.
+\bibitem{paq} M.~Mahoney. Adaptive weighing of context models for lossless data compression. Florida Tech. Technical Report CS-2005-16, 2005.
+\bibitem{lucky} Separating real improvements from lucky runs in autonomous ML research. NeurIPS 2026 Workshop for Autonomous Machine Learning Research (poster). \url{https://neurips.cc/virtual/2026/157611}
+\bibitem{curse} Winner's curse in LLM self-improvement loops. arXiv:2610.09239, 2026.
+\bibitem{perfaudit} Reliability audit of performance benchmarks across machine types. arXiv:2607.01211, 2026.
+\end{thebibliography}
+\end{document}
