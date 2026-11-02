@@ -46,7 +46,8 @@ def series_values():
             "records": str(r["records"]), "shrink": f"{r['shrinkage']['median']:.2f}", "best_gain": f"{r['best_verified_gain']:.4f}",
             "seed_runs_lo": str(r["seed_runs_per_claim"]["min"]), "seed_runs_hi": str(r["seed_runs_per_claim"]["max"]),
             "cost_lo": f"{min(costs):.2f}", "cost_hi": f"{max(costs):.2f}", "null_records": str(len(nulls)),
-            "null_false": str(sum(n["false_replicated"]["k"] for n in nulls.values())), "null_n": str(sum(n["nulls"] for n in nulls.values()))}, r["claims_table"]
+            "null_false": str(sum(n["false_replicated"]["k"] for n in nulls.values())), "null_n": str(sum(n["nulls"] for n in nulls.values())),
+            "null_refuted": str(sum(n["false_refuted"] for n in nulls.values()))}, r["claims_table"]
 
 
 def fair_values():
