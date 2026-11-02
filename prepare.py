@@ -1,8 +1,8 @@
 """Download the track's data once: TinyStories V2 (GPT-4 stories) as raw bytes.
 
 Train: the first 64 MiB of TinyStoriesV2-GPT4-train.txt. Held out: TinyStoriesV2-GPT4-valid.txt, which the
-verifier splits into a dev pool and a test pool. Story separators become one NUL byte. Nothing is redistributed;
-the files come from the dataset's own Hugging Face page and are checked against fixed hashes.
+verifier splits into a dev pool and a test pool. Story separators become one NUL byte. The files come from the dataset's
+own Hugging Face page and are checked against fixed hashes. Only the demo's 4 MiB excerpt in docs/demo is redistributed.
 
     python prepare.py
 """

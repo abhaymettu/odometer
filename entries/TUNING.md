@@ -318,3 +318,12 @@ I left window votes out of gpt, modern and rnn because they are not part of thos
 - Seeding the mixer's rows from a counting pass, since a count pass costs a fraction of a training pass.
 - Window votes on the transformers and the GRU.
 - A rescaled TAU for PPM if the budget ever rises.
+
+## Errata
+
+Found on review, after the numbers above were written. The tuning itself stands, and these correct how it was described.
+
+- The `mixer` notes say it reads about eight times the bytes of the transformers. The logs say about 5.4 times `modern`.
+- The `ppm` notes say it reads the whole file more than once. It draws with replacement, so that is about 1.46 file lengths of draws.
+- The batch column lists 67 `ppm` batches where the other columns imply about 46.
+- `RARE_BYTES` in `ppm` looks informed by dev. It is worth at most about 6e-5 bits per byte.

@@ -57,7 +57,7 @@ A new record has to beat the holder by more than 0.002 bits per byte at p < 0.01
 
 Speedruns time you, so they measure the hardware along with the idea, and a result from one machine means little on another. Pricing by FLOPs doesn't fix it: BLAS runs about a hundred times more FLOPs per second than `exp`, so an entry heavy on elementwise work would take a hundred times longer for the same reading, and an agent would find that gap fast.
 
-So the price list in [`odometer/_engine.py`](odometer/_engine.py) tracks time instead. A tick is about one nanosecond of one laptop core, and it's a pure function of tensor shapes, so the same program reaches the same reading anywhere. [`tools/calibrate.py`](tools/calibrate.py) measures every op against its price and reports any that drift more than 5x from the median. On a laptop and a VM the budget of 40 billion ticks takes a minute or two per seed.
+So the price list in [`odometer/_engine.py`](odometer/_engine.py) tracks time instead. A tick is about one nanosecond of one laptop core, and it's a pure function of tensor shapes, so the same program reaches the same reading anywhere. [`tools/calibrate.py`](tools/calibrate.py) measures every op against its price and reports any that drift more than 5x from the median. On a 2-core CI runner one seed takes between about 40 seconds and three minutes, depending on the entry.
 
 ## What a rerun guarantees
 
