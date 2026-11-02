@@ -175,5 +175,6 @@ not show that a gain has a real mechanism behind it, that it holds at other budg
 ## Deviations
 
 - 2026-11-02 07:33 CST. The first launch of `attempt-01` was killed by the shell that launched it, during the isolation probe.
-  The isolation gate had passed, and the task prompt had not reached any model. It was not counted as an infrastructure
-  death. Its folder was removed and the id reused.
+  The isolation gate had passed, and the task prompt had not reached any model. A second launch stopped on the probe folder
+  the first one left, also before the prompt reached a model. Neither was counted as an infrastructure death. The folders
+  were removed and the id reused.
