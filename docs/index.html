@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>odometer</title>
+<meta name="description" content="A speedrun for training a small language model, with a meter where the clock would be. Records have to survive a rerun on fresh seeds, on hardware anyone owns.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23191917'/%3E%3Ctext x='16' y='23' font-family='ui-monospace,monospace' font-size='20' text-anchor='middle' fill='%23f4f2ea'%3E0%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#">odometer</a>
+  <nav>
+    <a href="#records">Records</a>
+    <a href="#agents">Agents</a>
+    <a href="#fair">Fairness</a>
+    <a href="#cheats">Cheating</a>
+    <a href="https://github.com/abhaymettu/odometer">GitHub</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <h1>A speedrun for training a small language model, with a meter where the clock would be.</h1>
+  <p class="lead">Every tensor operation costs ticks, priced from its shape alone. An entry gets 40 billion of them, so a laptop and a server run the same program to the same reading and the same score. Hardware only buys finishing sooner.</p>
+
+  <div class="instrument" id="instrument">
+    <div class="wheels" id="wheels" role="img" aria-label="Odometer reading"></div>
+    <div class="reading-line"><span id="reading-label">The training budget, in ticks</span></div>
+    <div class="controls">
+      <button class="run" id="run" type="button"><span id="run-label">Run the record in this tab</span></button>
+      <p class="fine" id="fine">The current record's code, unchanged, at a 2 billion tick budget on a 4 MiB excerpt. It downloads about 15 MB and stays in this tab.</p>
+    </div>
+    <div class="live" id="live" hidden>
+      <div class="live-grid">
+        <div class="curve-wrap">
+          <svg id="curve" viewBox="0 0 400 110" preserveAspectRatio="none" aria-label="Training loss in bits per byte, falling as ticks are spent"><path id="curve-path" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>
+          <div class="curve-label"><span id="loss-now">Training loss</span><span id="status"></span></div>
+        </div>
+        <pre class="sample" id="sample" aria-live="off"></pre>
+      </div>
+      <dl class="result" id="result" hidden></dl>
+    </div>
+  </div>
+</section>
+
+<section id="records">
+  <h2>The record table</h2>
+  <p class="section-lead" id="records-lead"></p>
+  <div class="table" id="table"></div>
+  <p class="note">Click a row for its code, every seed, and the written review. The rule for a new record: beat the holder by more than 0.002 bits per byte at p &lt; 0.01, then do it again on 8 new seeds, then get a written review from someone who explains why the gain is real.</p>
+</section>
+
+<section id="start">
+  <h2>Check it yourself</h2>
+  <p>This reruns the current record on 2 fresh seeds on the sealed split, and prints your number next to the stored one. <span id="quick-time"></span></p>
+  <pre class="cmd"><code>git clone https://github.com/abhaymettu/odometer &amp;&amp; cd odometer
+python3 -m venv .venv &amp;&amp; .venv/bin/pip install numpy==2.5.4
+.venv/bin/python reproduce.py</code></pre>
+</section>
+
+<section id="ticks">
+  <h2>What a tick buys</h2>
+  <p>A tick is about a nanosecond of one laptop core, priced so that an entry can't get cheap work by picking the op the list underprices. Change the budget and the recipes keep their order at the top. The tuned recipes here are not retuned at other budgets, so a line that bends the wrong way is a recipe outgrowing its settings.</p>
+  <figure class="fig" data-svg="fig/sweep.svg"></figure>
+</section>
+
+<section id="agents">
+  <h2>Agents on the same table</h2>
+  <div id="agents-body"></div>
+</section>
+
+<section id="fair">
+  <h2>Same program, same reading</h2>
+  <div id="fair-body"></div>
+</section>
+
+<section id="cheats">
+  <h2>How a cheat dies</h2>
+  <div id="cheats-body"></div>
+</section>
+
+<section id="open">
+  <h2>What this does not do</h2>
+  <div id="open-body"></div>
+</section>
+</main>
+
+<footer>
+  <p>Data: TinyStories V2 (Eldan and Li, 2023). The excerpt on this page is under its CDLA-Sharing-1.0 licence. Baselines are recipes ported and tuned here from the authors named in each row, and no person ran them on this track.</p>
+</footer>
+<script src="app.js" type="module"></script>
+</body>
+</html>

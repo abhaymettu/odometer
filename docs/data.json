@@ -1,0 +1,198 @@
+{
+ "records": [
+  {
+   "name": "06-mixer-fold",
+   "title": "Mixing, folded head, lazy tables",
+   "who": "Claude Opus 5.5, in a pilot before the series",
+   "source": "agent: Claude Opus 5.5, high effort, pilot-02 claim 2 (a pilot, not a counted attempt)",
+   "test": 1.1439743695524935,
+   "sd": 0.0012330143655297978,
+   "dev": 1.1444639732728843,
+   "seeds": [
+    1.1434201851228478,
+    1.14411670530359,
+    1.1444434528411151,
+    1.1419653953087168,
+    1.142981080848678,
+    1.143969337964981,
+    1.1460497327310877,
+    1.1448490662989323
+   ],
+   "current": true,
+   "code": "records/06-mixer-fold/train.py",
+   "review": "records/06-mixer-fold/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/06-mixer-fold/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/06-mixer-fold"
+    ]
+   ]
+  },
+  {
+   "name": "05-mixer",
+   "title": "Hashed context mixing",
+   "who": "Recipe after Mahoney's PAQ and Knoll's cmix, ported and tuned here",
+   "source": "recipe: PAQ-style context mixing (Mahoney; Knoll), ported and tuned here",
+   "test": 1.1555358141052188,
+   "sd": 0.0010337058591144389,
+   "dev": 1.15663828486046,
+   "seeds": [
+    1.1558552087229594,
+    1.1575023136381761,
+    1.1546687039265449,
+    1.155323302410035,
+    1.1560852713784304,
+    1.1545543269806013,
+    1.1543908294261986,
+    1.1559065563588045
+   ],
+   "current": false,
+   "code": "records/05-mixer/train.py",
+   "review": "records/05-mixer/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/05-mixer/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/05-mixer"
+    ]
+   ]
+  },
+  {
+   "name": "04-ppm",
+   "title": "PPM with learned backoff",
+   "who": "Recipe after Cleary and Witten's PPM, ported and tuned here",
+   "source": "recipe: PPM (Cleary and Witten; Moffat), ported and tuned here",
+   "test": 1.2688270313824783,
+   "sd": 0.00030161960063554113,
+   "dev": 1.269214169688041,
+   "seeds": [
+    1.2688083826582903,
+    1.269053472086407,
+    1.2688795354754427,
+    1.2691847188736598,
+    1.2691419109166369,
+    1.2683585964286161,
+    1.2684763409026272,
+    1.2687132937181471
+   ],
+   "current": false,
+   "code": "records/04-ppm/train.py",
+   "review": "records/04-ppm/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/04-ppm/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/04-ppm"
+    ]
+   ]
+  },
+  {
+   "name": "03-modern",
+   "title": "Modern transformer",
+   "who": "Recipe from recent small-model practice, ported and tuned here",
+   "source": "recipe: modded-nanogpt (Jordan et al.), ported and tuned here",
+   "test": 1.5027288059871464,
+   "sd": 0.006960913319312128,
+   "dev": 1.5096935904123496,
+   "seeds": [
+    1.512032448594679,
+    1.497047559412481,
+    1.508666608910263,
+    1.4967924890567965,
+    1.5002722942503957,
+    1.508679144882157,
+    1.492724928737398,
+    1.5056149740530016
+   ],
+   "current": false,
+   "code": "records/03-modern/train.py",
+   "review": "records/03-modern/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/03-modern/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/03-modern"
+    ]
+   ]
+  },
+  {
+   "name": "02-rnn",
+   "title": "Character RNN",
+   "who": "Recipe after Karpathy's char-rnn, ported and tuned here",
+   "source": "recipe: GRU (Cho et al.), char-rnn (Karpathy), ported and tuned here",
+   "test": 1.5442153204088245,
+   "sd": 0.013019985872141558,
+   "dev": 1.5505688239121211,
+   "seeds": [
+    1.5608285140896347,
+    1.5634387831730319,
+    1.5271060048605047,
+    1.5479674012872564,
+    1.5399810883266327,
+    1.546480737044447,
+    1.5346272468005095,
+    1.5332927876885794
+   ],
+   "current": false,
+   "code": "records/02-rnn/train.py",
+   "review": "records/02-rnn/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/02-rnn/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/02-rnn"
+    ]
+   ]
+  },
+  {
+   "name": "01-gpt",
+   "title": "Small GPT",
+   "who": "Recipe after Karpathy's nanoGPT, ported and tuned here",
+   "source": "recipe: nanoGPT (Karpathy, after Radford et al.), ported and tuned here",
+   "test": 1.705758906035867,
+   "sd": 0.01059715002251711,
+   "dev": 1.7189408299535924,
+   "seeds": [
+    1.7202286627262693,
+    1.7176387922769514,
+    1.7090957907220004,
+    1.7087967688364327,
+    1.7074496370900283,
+    1.6966279802637103,
+    1.6952790410082377,
+    1.6909545753633066
+   ],
+   "current": false,
+   "code": "records/01-gpt/train.py",
+   "review": "records/01-gpt/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/01-gpt/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/01-gpt"
+    ]
+   ]
+  }
+ ],
+ "lead": "",
+ "html": {}
+}
