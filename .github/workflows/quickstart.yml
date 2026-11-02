@@ -1,0 +1,23 @@
+name: quickstart
+on:
+  workflow_dispatch:
+
+jobs:
+  clean-clone:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: From an empty directory to a verified result, timed
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          start=$(date +%s)
+          git clone "https://x-access-token:$TOKEN@github.com/$GITHUB_REPOSITORY" odometer
+          cd odometer
+          python3 -m venv .venv
+          .venv/bin/pip install numpy==2.5.4
+          .venv/bin/python reproduce.py
+          echo "clean clone to verified result: $(( $(date +%s) - start )) seconds"

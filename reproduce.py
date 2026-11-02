@@ -34,6 +34,8 @@ def verify(record, seeds):
 
 
 def main():
+    if sys.version_info < (3, 12):
+        raise SystemExit(f"odometer needs Python 3.12 or newer, for sys.monitoring. This is {sys.version.split()[0]}.")
     what = sys.argv[1] if len(sys.argv) > 1 else "record"
     if not (ROOT / "data" / "train.bin").exists() and what in ("record", "table"):
         subprocess.run([sys.executable, str(ROOT / "prepare.py")], check=True)
