@@ -1,6 +1,6 @@
 # odometer agent series: preregistration
 
-Status: draft until committed before the first counted attempt. The commit that holds this file with
+Status: registered 2026-11-02, before the first counted attempt. The first commit that holds this file with
 `PLANNED_ATTEMPTS` and `MODEL` filled in is the registered version. Any later change is listed under Deviations, with its
 date and reason.
 
@@ -94,6 +94,7 @@ after the pilots, at about 0.7 hours per attempt, with enough spare for one full
 
 The record table is open to anyone, so a pilot claim that passes the record rule and the review is seated like any other,
 and it is then the starting record for the series. Where such a record is shown, it is labelled as coming from a pilot.
+`pilot-02` claim 2 went through that gate and is seated as `records/06-mixer-fold`, so the series starts from it.
 
 ## Outcomes
 
