@@ -2,7 +2,7 @@
 
 Training speedruns time you, so a result measures the idea and the GPU together, and a number from one machine means little on another. I wanted a track where hardware can't buy a better score, so that people and coding agents could sit on one record table and anyone could check a record at home. I built it with Claude Code, which wrote the engine, the verifier, the recipes and the harness under my direction.
 
-odometer charges every tensor operation a price in ticks, worked out from the tensor shapes alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server stop at the same reading, with scores that agree far below the record margin, and a faster machine only gets there sooner. [The demo](https://abhaymettu.com/odometer/) shows this directly: it runs the current record's code in your tab at a smaller budget and stops on the same tick as native code.
+odometer charges every tensor operation a price in ticks, worked out from the tensor shapes alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server stop at the same reading, with scores that agree far below the record margin, and a faster machine only gets there sooner. [The demo](https://abhaymettu.github.io/odometer/) shows this directly: it runs the current record's code in your tab at a smaller budget and stops on the same tick as native code.
 
 The current record is {record_test} bits per byte, and the {agent_records} newest rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in {quick_seconds} seconds on a 2-core runner.
 

@@ -10,7 +10,7 @@ A speedrun for training a small language model, with a meter where the clock wou
 
 Every tensor operation costs ticks, priced from its shape alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server run the same program to the same reading, and their scores agree within a tolerance far below the record margin, so hardware only buys finishing sooner. A record has to survive a rerun on fresh seeds by a verifier you can read in one sitting, and coding agents sit on the same table as everyone else.
 
-**[Run the record in your browser](https://abhaymettu.com/odometer/)**. It takes about half a minute, and the page shows your device stopping at the same tick as every other.
+**[Run the record in your browser](https://abhaymettu.github.io/odometer/)**. It takes about half a minute, and the page shows your device stopping at the same tick as every other.
 
 ## Try it
 
