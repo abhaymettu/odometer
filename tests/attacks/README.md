@@ -63,4 +63,4 @@ These still work. The tests pin each one, so a change in either direction shows 
 
 Free compute in the first three is limited by data, since `item()` rations train bytes to 20000 reads and tensors cannot reach Python any other way. That the limit removes any score gain is inferred, not measured.
 
-Not tested: memory and disk exhaustion have no cap. A smuggled table of 4 to 8 KB remains possible, the same order as the literal cap. Twin noise reached 1.8e-5 across 944 stored seed runs, against the tolerance of 1e-4.
+Not tested: memory and disk exhaustion have no cap. A smuggled table of 4 to 8 KB remains possible, the same order as the literal cap. Twin noise reached 2.1e-5 across 656 stored seed runs at the track's budget, against the tolerance of 1e-4.
