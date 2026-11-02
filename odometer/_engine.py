@@ -7,14 +7,23 @@ The unit is a tick, priced to be about one nanosecond of one laptop core. tools/
 tick for every op on real machines and fails if any op drifts more than a factor of 5 from the median, so an entry
 cannot get cheap work by picking mispriced ops.
 
-Prices (v2), per call:
+Prices (v3), per call:
   * every call: 2000 ticks, the Python overhead of the call itself. Backward passes pay it again per node.
-  * matmul of (..., m, k) @ (..., k, n): m * k * n / 64 per batch element; the same again per input needing a gradient.
-  * cheap elementwise work (add, mul, negate, compare, copy, sum): 1 tick per 4 elements.
-  * sqrt and div: 1 tick per 2 elements. exp, log, tanh, sigmoid, sin, cos: 1 per element. where, power: 2 per element.
-  * randn 4 and rand 2 per element. Logit ops (softmax, log_softmax, cross_entropy): 2 per logit, 1 per logit backward.
-  * embedding: 8 per row plus 1 per 4 elements forward; backward 8 per element plus the zeroed table.
-  * views (reshape, transpose, slicing) are free apart from the call price.
+  * matmul of (..., m, k) @ (..., k, n): m * max(k, 64) * n / 128 plus 256, per batch element (a 2-D right side is one
+    flat call, so m counts the batch and the 256 is paid once). The same again per input needing a gradient, with the
+    inner and outer dimensions swapped to match the product backward actually does.
+  * cheap elementwise work (add, mul, negate, compare, copy, sum): 1 tick per 4 elements. ones and full 1 per 8, and
+    zeros and the backward of a sum 1 per 16 and 1 per 8, because they only fill memory.
+  * sqrt, div, tanh: 1 tick per 2 elements. exp, log, sigmoid, sin, cos: 1 per element. where, power, sign: 2 per
+    element. Integer % and //: 1 per element.
+  * randn 4 and rand 2 per element. Logit ops (softmax, log_softmax, cross_entropy): 2 per logit, 1 per logit backward;
+    cross_entropy pays the call price twice.
+  * embedding: 1 per 4 elements, plus per row 6 and 1 per million table floats; backward 16 per element plus the zeroed
+    table.
+  * concat: 256 per input tensor on top of the elements, 1024 per input tensor backward. split: 2000 per part forward,
+    512 per part backward. data.batch: 2000 plus 64 per row plus 1 per byte.
+  * views (transpose, slicing, a reshape that keeps the memory) are free apart from the call price. A reshape that has
+    to copy pays 1 per element.
 
 When a charge would pass the budget, the op raises BudgetExhausted and every later op raises too.
 """
@@ -61,7 +70,8 @@ _CALL = 2000  # ticks for one engine call, whatever its size
 def _tick(n=0):
     if _M.exhausted:
         raise BudgetExhausted("the odometer already reached its budget")
-    n = int(n) + _CALL
+    n = int(n) if n > 0 else 0  # a negative price would run the odometer backwards
+    n += _CALL
     if _M.budget is not None and _M.used + n > _M.budget:
         _M.exhausted = True
         raise BudgetExhausted(f"budget {_M.budget:.3e} reached at {_M.used:.3e}")
@@ -254,10 +264,10 @@ class Tensor:
         return matmul(self, o)
 
     def __mod__(self, o):
-        return _int_binary(self, o, _np.mod)
+        return _int_binary(self, o, _np.mod, per_4=4)
 
     def __floordiv__(self, o):
-        return _int_binary(self, o, _np.floor_divide)
+        return _int_binary(self, o, _np.floor_divide, per_4=4)
 
     def __gt__(self, o):
         return _compare(self, o, _np.greater)
@@ -339,23 +349,24 @@ def _floats(*ts):
 def param(x):
     """Mark a tensor as a trainable leaf."""
     _train_only("param()")
+    _tick(x.size // 4)
     t = Tensor(_np.array(x._d, dtype=_F))
     t._rg = True
     return t
 
 
 def zeros(shape):
-    _tick(_np.prod(shape) // 4)
+    _tick(_np.prod(shape) // 16)
     return Tensor(_np.zeros(shape, _F))
 
 
 def ones(shape):
-    _tick(_np.prod(shape) // 4)
+    _tick(_np.prod(shape) // 8)
     return Tensor(_np.ones(shape, _F))
 
 
 def full(shape, value):
-    _tick(_np.prod(shape) // 4)
+    _tick(_np.prod(shape) // 8)
     return Tensor(_np.full(shape, float(value), _F))
 
 
@@ -449,7 +460,7 @@ def rsqrt(x):
 
 
 def tanh(x):
-    return _unary(x, _np.tanh, lambda x, y, g: g * (1 - y * y), bwd=2)
+    return _unary(x, _np.tanh, lambda x, y, g: g * (1 - y * y), fwd=2, bwd=2)
 
 
 def sigmoid(x):
@@ -469,13 +480,13 @@ def cos(x):
 
 
 def abs(x):
-    return _unary(x, _np.abs, lambda x, y, g: g * _np.sign(x), fwd=1)
+    return _unary(x, _np.abs, lambda x, y, g: g * _np.sign(x), fwd=1, bwd=8)
 
 
 def sign(x):
     """No gradient."""
     _floats(x)
-    _tick(x.size // 4)
+    _tick(x.size * 2)
     return Tensor(_np.sign(x._d).astype(_F))
 
 
@@ -587,12 +598,12 @@ def _compare(a, b, f):
     return Tensor(out)
 
 
-def _int_binary(a, b, f):
+def _int_binary(a, b, f, per_4=1):
     a, b = _as_tensor(a), _as_tensor(b, a)
     if not (a.is_int and b.is_int):
         raise RuleViolation("integer ops need two integer operands")
     out = f(a._d, b._d).astype(_I)
-    _tick(out.size // 4)
+    _tick(out.size * per_4 // 4)
     return Tensor(out)
 
 
@@ -618,7 +629,7 @@ def sum(x, axis=None, keepdims=False):
     _tick(x.size // 4)
 
     def back(g, need):
-        _tick(x.size // 4)
+        _tick(x.size // 8)
         gk = g if keepdims else _np.expand_dims(g, axes)
         return (_np.broadcast_to(gk, x.shape).astype(_F),)
 
@@ -649,13 +660,17 @@ def max(x, axis=None, keepdims=False):
 # ---------------------------------------------------------------- shapes (views are free)
 
 
+def _reshaped(a, shape):
+    out = a.reshape(shape)
+    _tick(0 if _np.may_share_memory(out, a) else out.size)
+    return out
+
+
 def reshape(x, *shape):
     if len(shape) == 1 and isinstance(shape[0], tuple):
         shape = shape[0]
     src = x.shape
-    _tick()
-    out = x._d.reshape(shape)
-    return _make(out, (x,), lambda g, need: (g.reshape(src),))
+    return _make(_reshaped(x._d, shape), (x,), lambda g, need: (_reshaped(g, src),))
 
 
 def transpose(x, *axes):
@@ -675,7 +690,7 @@ def swapaxes(x, a, b):
 def _check_basic_key(key):
     keys = key if isinstance(key, tuple) else (key,)
     for k in keys:
-        if isinstance(k, Tensor) or isinstance(k, (list, tuple)):
+        if type(k) not in (int, slice, type(None), type(...)):
             raise RuleViolation("indexing takes ints, slices, None and ...; use embedding() to gather")
 
 
@@ -698,13 +713,13 @@ def getitem(x, key):
 
 def split(x, sections, axis=-1):
     """Split into equal parts (a view; the backward is a concat)."""
-    _tick()
     parts = _np.split(x._d, sections, axis=axis)
+    _tick(_CALL * len(parts))
     outs = []
     for i, part in enumerate(parts):
 
         def back(g, need, i=i):
-            _tick(_np.prod(x.shape) // 4)
+            _tick(_np.prod(x.shape) // 4 + 512 * len(parts))
             full_g = [_np.zeros_like(p) for p in parts]
             full_g[i] = g
             return (_np.concatenate(full_g, axis=axis),)
@@ -716,13 +731,14 @@ def split(x, sections, axis=-1):
 def concat(ts, axis=-1):
     ts = list(ts)
     out = _np.concatenate([t._d for t in ts], axis=axis)
-    _tick(out.size // 4)
+    _tick(out.size // 4 + 256 * len(ts))
     if all(t.is_int for t in ts):
         return Tensor(out)
     _floats(*ts)
     bounds = _np.cumsum([t.shape[axis] for t in ts])[:-1]
 
     def back(g, need):
+        _tick(1024 * len(ts))
         return tuple(_np.split(g, bounds, axis=axis))
 
     return _make(out, tuple(ts), back)
@@ -731,30 +747,36 @@ def concat(ts, axis=-1):
 # ---------------------------------------------------------------- matmul
 
 
+def _matmul_price(rows, inner, cols, calls):
+    return calls * (rows * cols * (inner if inner > 64 else 64) // 128 + 256)
+
+
 def matmul(a, b):
     _floats(a, b)
     ad, bd = a._d, b._d
     if ad.ndim < 2 or bd.ndim < 2:
         raise RuleViolation("matmul() needs tensors with at least two dimensions")
+    m, k, n = ad.shape[-2], ad.shape[-1], bd.shape[-1]
+    calls = int(_np.prod(_np.broadcast_shapes(ad.shape[:-2], bd.shape[:-2])))
+    if bd.ndim == 2:
+        m, calls = m * calls, 1
+    _tick(_matmul_price(m, k, n, calls))  # before the work, because time here is not bounded by memory
     if bd.ndim == 2 and ad.ndim > 2:
         lead = ad.shape[:-1]
         out = (ad.reshape(-1, ad.shape[-1]) @ bd).reshape(*lead, bd.shape[-1])
     else:
         out = ad @ bd
-    k = ad.shape[-1]
-    price = out.size * k // 64
-    _tick(price)
 
     def back(g, need):
         ga = gb = None
         if need[0]:
-            _tick(price)
+            _tick(_matmul_price(m, n, k, calls))
             if bd.ndim == 2:
                 ga = (g.reshape(-1, g.shape[-1]) @ bd.T).reshape(ad.shape)
             else:
                 ga = _unbroadcast(g @ _np.swapaxes(bd, -1, -2), ad.shape)
         if need[1]:
-            _tick(price)
+            _tick(_matmul_price(k, m, n, calls))
             if bd.ndim == 2:
                 gb = ad.reshape(-1, k).T @ g.reshape(-1, g.shape[-1])
             else:
@@ -776,11 +798,11 @@ def embedding(table, idx):
     if ix.size and (ix.min() < 0 or ix.max() >= table.shape[0]):
         raise RuleViolation("embedding index out of range")
     out = table._d[ix]
-    _tick(8 * ix.size + out.size // 4)
+    _tick((6 + table.size // (1 << 20)) * ix.size + out.size // 4)  # bigger tables miss the cache on more rows
     rows = table.shape
 
     def back(g, need):
-        _tick(8 * g.size + table.size // 16)
+        _tick(16 * g.size + table.size // 16)
         gt = _np.zeros(rows, _F)
         _np.add.at(gt, ix.reshape(-1), g.reshape(-1, rows[1]))
         return (gt, None)
@@ -827,7 +849,7 @@ def cross_entropy(logits, targets):
     V = logits.shape[-1]
     z = logits._d.reshape(-1, V)
     t = targets._d.reshape(-1)
-    _tick(2 * z.size)
+    _tick(2 * z.size + _CALL)
     zmax = z.max(axis=1, keepdims=True)
     e = _np.exp(z - zmax)
     s = e.sum(axis=1, keepdims=True)

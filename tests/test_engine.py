@@ -92,7 +92,7 @@ def test_costs_are_shape_only():
     a, b = od.ones((8, 16)), od.ones((16, 32))
     start = od.used()
     od.matmul(a, b)
-    assert od.used() - start == 2000 + 8 * 16 * 32 // 64
+    assert od.used() - start == 2000 + 8 * 32 * 64 // 128 + 256
     start = od.used()
     od.exp(a)
     a.reshape(16, 8).T
@@ -106,8 +106,8 @@ def test_backward_is_charged():
     loss = od.sum(od.matmul(x, w))
     fwd = od.used() - start
     loss.backward()
-    # three nodes visited in the walk (sum, matmul, and the leaf pays nothing), the sum's broadcast, and dW
-    assert od.used() - start - fwd == 2 * 2000 + (2000 + 8 * 32 // 4) + (2000 + 8 * 16 * 32 // 64)
+    # two nodes pay the call price in the walk (the leaf pays nothing), then the sum's broadcast and dW pay theirs
+    assert od.used() - start - fwd == 2 * 2000 + (2000 + 8 * 32 // 8) + (2000 + 16 * 32 * 64 // 128 + 256)
 
 
 def test_budget_is_sticky():

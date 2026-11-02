@@ -31,7 +31,7 @@ class TrainData:
         if B < 1 or T < 1 or T >= self._a.size // 2:
             raise _engine.RuleViolation("bad batch shape")
         _engine._train_only("batch()")
-        _engine._tick(16 * B + B * T)
+        _engine._tick(2000 + 64 * B + B * T)  # a row start is a cache miss in a file this big
         rng = _engine._M.data_rng
         if align:
             pos = self._starts[rng.integers(0, self._starts.size, size=B)]

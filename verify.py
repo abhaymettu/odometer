@@ -8,15 +8,18 @@
 
 What a run guarantees:
   1. The source passes static rules. It imports only odometer and math, and it can name only the engine's public API,
-     math, and plain container methods. No try, class, global, match or attribute assignment (except .grad), and no
-     module-level state beyond constants. Literals are rationed, so a table cannot be smuggled in the source.
+     math, and plain container methods. No try, class, global, match, decorator or attribute assignment (except
+     x.grad = None), and no module-level state beyond constants. Literals and syntax nodes are rationed, so a table
+     cannot be smuggled in the source.
   2. train() runs in its own process with one BLAS thread, under the training budget, with the verifier's seed. That
      process never loads held-out bytes. A run that lets BudgetExhausted escape is void.
-  3. Python work outside the engine is counted, not timed: entry lines and jumps are capped.
+  3. Python work outside the engine is counted, not timed: entry lines and jumps are capped. One C call counts once
+     however long it runs (a sum over a long range, big-integer arithmetic); that work has only the rationed item()
+     reads to learn from, and the wall limit ends it.
   4. Scoring runs in a second, fresh process. forward() sees held-out inputs, never targets, and its compute per byte
      is capped. Every call gets a fresh params dict and fresh tensors, so no state survives between calls. A quarter
-     of the windows get a twin whose bytes after a random cut come from another window; the twins land in other
-     batches. Logits before the cut must match, which proves forward() is causal and does not look across rows.
+     of the windows get a twin whose bytes after a random cut come from another window; a shuffle puts nearly all twins
+     in other batches. Logits before the cut must match, which catches forward() looking ahead or across rows.
   5. Seeds are drawn fresh unless given, and written to the log, so anyone can rerun the exact runs.
 """
 
@@ -43,23 +46,24 @@ sys.path.insert(0, str(ROOT))
 import stats  # noqa: E402
 
 TRACK = {
-    "version": "odometer-v2",
+    "version": "odometer-v3",
     "train_budget": 100_000_000_000,  # ticks for everything train() does; one tick is about one laptop nanosecond
     "eval_ticks_per_byte": 50_000,  # forward() price cap per scored byte
-    "param_cap": 1 << 22,  # floats in the returned parameters
+    "param_cap": 1 << 22,  # floats in the returned parameters, plus characters in their names
     "source_cap": 64 * 1024,  # bytes of train.py
-    "literal_cap": 4096,  # bytes of string and number literals in train.py
+    "literal_cap": 4096,  # bytes of literals, keyword names and function names in train.py
+    "node_cap": 8192,  # syntax nodes in train.py; a table spelled in variable names has no literals to count
     "python_lines": 20_000_000,  # entry lines and jumps per process
     "eval_context": 512,
     "eval_batch": 16,
     "eval_windows": 1024,  # windows of eval_context bytes per held-out split
     "twin_fraction": 0.25,
     "twin_positions": 32,
-    "twin_tolerance": 1e-3,  # max |log p| difference between twins, in nats
+    "twin_tolerance": 1e-4,  # max |log p| difference between twins, in nats; a leak this small gains 1.4e-4 bits per byte
     "item_cap": 20_000,  # item() reads in train()
     "wall_limit_seconds": 3600,  # only catches hangs; it never decides a score
 }
-SMOKE = {"train_budget": 2_000_000_000, "eval_windows": 32}
+SMOKE = {"train_budget": 2_000_000_000, "eval_windows": 32, "wall_limit_seconds": 300}
 RECORD_ALPHA = 0.01
 RECORD_MARGIN = 0.002  # bits per byte a new record must clear on top of the significance test
 LOW_VARIANCE_RATIO = 0.3  # seed SD below this fraction of the incumbent's gets flagged for a human look
@@ -69,9 +73,13 @@ THREAD_VARS = ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VE
 
 ALLOWED_IMPORTS = {"odometer", "math"}
 ALLOWED_BUILTINS = {
-    "abs", "all", "any", "bool", "dict", "divmod", "enumerate", "float", "int", "isinstance", "len", "list", "map",
-    "max", "min", "pow", "print", "range", "reversed", "round", "set", "sorted", "str", "sum", "tuple", "zip",
+    "abs", "all", "any", "bool", "dict", "divmod", "enumerate", "float", "int", "isinstance", "len", "list", "max",
+    "min", "pow", "print", "range", "reversed", "round", "set", "sorted", "str", "sum", "tuple", "zip",
     "True", "False", "None",
+}
+# math without its functions over sequences and big integers, which do unbounded numeric work in one counted line
+MATH_NAMES = {n for n in dir(math) if not n.startswith("_")} - {
+    "comb", "dist", "factorial", "fsum", "gcd", "hypot", "isqrt", "lcm", "perm", "prod", "sumprod",
 }
 CONTAINER_ATTRS = {
     "append", "extend", "insert", "pop", "remove", "reverse", "sort", "index", "count", "clear", "copy", "items", "keys",
@@ -88,7 +96,7 @@ def allowed_attrs():
 
     engine = {n for n in dir(od) if not n.startswith("_")} - {"Tensor"}
     tensor = {n for n in dir(od.Tensor) if not n.startswith("_")}
-    return engine, engine | tensor | {"batch", "num_bytes"} | {n for n in dir(math) if not n.startswith("_")} | CONTAINER_ATTRS
+    return engine, engine | tensor | {"batch", "num_bytes"} | MATH_NAMES | CONTAINER_ATTRS
 
 
 def is_constant_expr(node):
@@ -97,14 +105,24 @@ def is_constant_expr(node):
 
 
 def literal_bytes(tree):
+    """Everything in the source an entry can read back as data. dict(name=1) and str(function) turn names into strings."""
     docstrings = {id(n.body[0].value) for n in ast.walk(tree)
                   if isinstance(n, (ast.Module, ast.FunctionDef)) and n.body and isinstance(n.body[0], ast.Expr)
                   and isinstance(n.body[0].value, ast.Constant) and isinstance(n.body[0].value.value, str)}
+
+    def size(v):
+        if isinstance(v, str):
+            return len(v.encode("utf-8", "surrogatepass"))
+        return len(v) if isinstance(v, bytes) else max(8, v.bit_length() // 8) if isinstance(v, int) else 8
+
     total = 0
     for n in ast.walk(tree):
         if isinstance(n, ast.Constant) and id(n) not in docstrings:
-            v = n.value
-            total += len(v) if isinstance(v, (str, bytes)) else max(8, v.bit_length() // 8) if isinstance(v, int) else 8
+            total += size(n.value)
+        elif isinstance(n, ast.keyword) and n.arg:
+            total += size(n.arg)
+        elif isinstance(n, ast.FunctionDef):
+            total += size(n.name)
     return total
 
 
@@ -113,11 +131,15 @@ def static_problems(src, track=TRACK):
         return [f"source is over {track['source_cap']} bytes"]
     try:
         tree = ast.parse(src)
-    except SyntaxError as e:
+    except (SyntaxError, MemoryError, RecursionError) as e:
         return [f"syntax error: {e}"]
     engine, attrs = allowed_attrs()
+    forbidden = set(dir(builtins)) - ALLOWED_BUILTINS
+    nodes = list(ast.walk(tree))
+    clears_grad = {id(t) for n in nodes if isinstance(n, ast.Assign) and isinstance(n.value, ast.Constant) and n.value.value is None
+                   for t in n.targets if isinstance(t, ast.Attribute) and t.attr == "grad"}
     problems = []
-    for node in ast.walk(tree):
+    for node in nodes:
         line = getattr(node, "lineno", 0)
         if isinstance(node, BANNED_NODES):
             problems.append(f"line {line}: {type(node).__name__} is not allowed")
@@ -125,29 +147,35 @@ def static_problems(src, track=TRACK):
             problems += [f"line {line}: import {a.name}" for a in node.names if a.name not in ALLOWED_IMPORTS]
         elif isinstance(node, ast.ImportFrom):
             if node.level or node.module not in ALLOWED_IMPORTS:
-                problems.append(f"line {line}: from {node.module} import")
+                problems.append(f"line {line}: from {'.' * node.level}{node.module or ''} import")
             else:
-                names = engine if node.module == "odometer" else {n for n in dir(math) if not n.startswith("_")}
+                names = engine if node.module == "odometer" else MATH_NAMES
                 problems += [f"line {line}: from {node.module} import {a.name}" for a in node.names if a.name not in names]
+        elif isinstance(node, ast.alias):
+            if node.asname and node.asname.startswith("_"):  # import math as __builtins__ swaps the builtins table
+                problems.append(f"line {line}: {node.asname} starts with an underscore")
         elif isinstance(node, ast.Attribute):
             if node.attr not in attrs:
                 problems.append(f"line {line}: .{node.attr} is not on the allowed list")
-            if not isinstance(node.ctx, ast.Load) and node.attr != "grad":
+            if not isinstance(node.ctx, ast.Load) and id(node) not in clears_grad:
                 problems.append(f"line {line}: assigning to .{node.attr}")
-        elif isinstance(node, ast.Name) and node.id.startswith("_") and node.id != "_":
-            problems.append(f"line {line}: {node.id} starts with an underscore")
+        elif isinstance(node, ast.Name):
+            if node.id.startswith("_") and node.id != "_":
+                problems.append(f"line {line}: {node.id} starts with an underscore")
+            elif node.id in forbidden:
+                problems.append(f"line {line}: builtin {node.id} is not on the allowed list")
         elif isinstance(node, (ast.FunctionDef, ast.Lambda)):
-            if isinstance(node, ast.FunctionDef) and node.name.startswith("_"):
-                problems.append(f"line {line}: {node.name} starts with an underscore")
+            if isinstance(node, ast.FunctionDef):
+                if node.name.startswith("_"):
+                    problems.append(f"line {line}: {node.name} starts with an underscore")
+                if node.decorator_list:  # a decorator is a call at module level, so it could build state that persists
+                    problems.append(f"line {line}: decorators are not allowed")
+                if node.returns and not is_constant_expr(node.returns):
+                    problems.append(f"line {line}: an annotation must be a constant")
             if not all(is_constant_expr(d) for d in [*node.args.defaults, *node.args.kw_defaults] if d is not None):
                 problems.append(f"line {line}: a default argument must be a constant")
-    forbidden = set(dir(builtins)) - ALLOWED_BUILTINS
-    bound = {n.id for n in ast.walk(tree) if isinstance(n, ast.Name) and not isinstance(n.ctx, ast.Load)}
-    bound |= {a.arg for n in ast.walk(tree) if isinstance(n, ast.arguments) for a in [*n.args, *n.kwonlyargs, *n.posonlyargs]}
-    bound |= {n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)}
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id in forbidden and node.id not in bound:
-            problems.append(f"line {node.lineno}: builtin {node.id} is not on the allowed list")
+        elif isinstance(node, ast.arg) and node.annotation and not is_constant_expr(node.annotation):
+            problems.append(f"line {line}: an annotation must be a constant")  # annotations run once, at def time
     for node in tree.body:
         fine = isinstance(node, (ast.Import, ast.ImportFrom, ast.FunctionDef))
         fine |= isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant)
@@ -156,6 +184,8 @@ def static_problems(src, track=TRACK):
             problems.append(f"line {node.lineno}: module level allows only imports, defs and constants")
     if literal_bytes(tree) > track["literal_cap"]:
         problems.append(f"literals total {literal_bytes(tree)} bytes, over the cap of {track['literal_cap']}")
+    if len(nodes) > track["node_cap"]:
+        problems.append(f"source has {len(nodes)} syntax nodes, over the cap of {track['node_cap']}")
     top = {n.name for n in tree.body if isinstance(n, ast.FunctionDef)}
     problems += [f"no top-level {f}()" for f in ("train", "forward") if f not in top]
     return problems
@@ -163,7 +193,7 @@ def static_problems(src, track=TRACK):
 
 def load_entry(path, track):
     """Execute the entry with a builtins table that has no way out of the engine."""
-    src = pathlib.Path(path).read_text()
+    src = pathlib.Path(path).read_text(encoding="utf-8")
     problems = static_problems(src, track)
     if problems:
         raise SystemExit("static rules failed:\n  " + "\n  ".join(problems))
@@ -229,8 +259,8 @@ def child_train(entry, seed, out):
             status = "void: train() must return a dict of name -> Tensor"
         elif any(v.is_int for v in params.values()):
             status = "void: parameters must be float tensors"
-        elif sum(v.size for v in params.values()) > track["param_cap"]:
-            status = f"void: more than {track['param_cap']} parameters"
+        elif sum(v.size + len(k) for k, v in params.items()) > track["param_cap"]:
+            status = f"void: more than {track['param_cap']} parameters, with one more per character of their names"
         else:
             np.savez(out / "params.npz", **{f"p{i}": v._d for i, v in enumerate(params.values())})
             (out / "names.json").write_text(json.dumps(list(params)))
@@ -280,8 +310,8 @@ def child_eval(entry, seed, split, out):
         for start in range(0, len(rows), B):
             idx = order[start : start + B]
             logits = module.forward({k: od.Tensor(a) for k, a in arrays.items()}, od.Tensor(rows[idx].astype(np.int32)))
-            if type(logits) is not od.Tensor or logits.shape != (len(idx), C, od.VOCAB):
-                raise od.RuleViolation(f"forward() must return logits of shape (batch, {C}, {od.VOCAB})")
+            if type(logits) is not od.Tensor or logits.is_int or logits.shape != (len(idx), C, od.VOCAB):
+                raise od.RuleViolation(f"forward() must return float logits of shape (batch, {C}, {od.VOCAB})")
             z = logits._d.astype(np.float64)
             if not np.isfinite(z).all():
                 raise od.RuleViolation("forward() returned non-finite logits")
@@ -319,8 +349,8 @@ def run_seed(entry, seed, split, track, keep):
             cmd = [sys.executable, "-I", str(ROOT / "verify.py"), f"--child-{stage}", str(entry), str(seed), *extra, tmp]
             log = keep / f"seed-{seed}-{stage}.log"
             try:
-                proc = subprocess.run(cmd, cwd=tmp, env=env, capture_output=True, text=True, timeout=track["wall_limit_seconds"])
-                log.write_text(proc.stdout + proc.stderr)
+                with open(log, "wb") as sink:
+                    subprocess.run(cmd, cwd=tmp, env=env, stdout=sink, stderr=subprocess.STDOUT, timeout=track["wall_limit_seconds"])
             except subprocess.TimeoutExpired:
                 result["status"] = f"void: {stage} process passed the wall limit"
                 return result
@@ -378,7 +408,7 @@ def judge(bpbs, record_bpbs):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("entry")
-    ap.add_argument("--seeds", default="8", help="a count of fresh seeds, or a comma list to rerun exact seeds")
+    ap.add_argument("--seeds", default="8", help="a count of fresh seeds, or a comma list to rerun exact seeds ('11,' is seed 11)")
     ap.add_argument("--split", default="test", choices=("dev", "test"))
     ap.add_argument("--jobs", type=int, default=0, help="seeds in parallel (default: min(seeds, cpus))")
     ap.add_argument("--against", help="a record log; tests whether this entry beats it, then confirms on new seeds")
@@ -388,12 +418,12 @@ def main():
 
     track = {**TRACK, **SMOKE} if args.smoke else TRACK
     entry = pathlib.Path(args.entry).resolve()
-    src = entry.read_text()
+    src = entry.read_text(encoding="utf-8")
     problems = static_problems(src, track)
     if problems:
         print("static rules failed:\n  " + "\n  ".join(problems))
         sys.exit(2)
-    seeds = [int(s) for s in args.seeds.split(",")] if "," in args.seeds else fresh_seeds(int(args.seeds))
+    seeds = [int(s) for s in args.seeds.split(",") if s] if "," in args.seeds else fresh_seeds(int(args.seeds))
     name = entry.parent.name if entry.name == "train.py" else entry.stem
     stamp = time.strftime("%Y%m%d-%H%M%S")
     out = pathlib.Path(args.out) if args.out else ROOT / "runs" / f"{name}-{stamp}.json"
@@ -446,6 +476,8 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(log, indent=1))
     print(f"  log: {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out}")
+    if len(ok) != len(results):
+        sys.exit(1)
 
 
 if __name__ == "__main__":
