@@ -114,7 +114,7 @@ Every score reads the same 1024 windows, so every plus-minus here covers seed no
 | Mixing, cold-start fix | 1.1255 | 1.1259 | +0.0004 |
 | Mixing, learned in-window gate | 1.1069 | 1.1062 | -0.0007 |
 | Mixing, words and story boundaries | 1.0976 | 1.0974 | -0.0001 |
-| Mixing, gate fitted on fresh bytes | 1.0931 | 1.0930 | -0.0000 |
+| Mixing, gate fitted on fresh bytes | 1.0931 | 1.0930 | +0.0000 |
 | Mixing, thinner high-order tables, cheaper gate | 1.0890 | 1.0887 | -0.0002 |
 
 Each record also needs a written review from a fresh Claude session, which reads the code and logs and has to say what buys the gain. Much of the gain is tied to this track: about a third of record 07's gain (0.0061 of 0.0187, one seed, dev) sits in the first 16 of 512 positions of a window, and about three quarters of the gain in attempt-04's record 09 is eval-time modelling, paid for with 36.5% more eval ticks. A review can refuse a record, but none has: all six on agent records returned real, even the one that found the agent's account of its own change wrong. The briefs are in [study/reviews.md](study/reviews.md). What each one wrote is in `records/<name>/review.md`.

@@ -96,7 +96,7 @@ def fresh_values(rows):
             seeds = json.loads(path.read_text())["seeds"]
             used, fresh = sum(s["used"] for s in seeds) / len(seeds), sum(s["fresh"] for s in seeds) / len(seeds)
             by[r["name"]] = (used, fresh)
-            table.append((r["title"], f"{used:.4f}", f"{fresh:.4f}", f"{fresh - used:+.4f}"))
+            table.append((r["title"], f"{used:.4f}", f"{fresh:.4f}", f"{round(fresh - used, 4) + 0.0:+.4f}"))
     if len(by) < 2:
         return dict.fromkeys(("fresh_first", "fresh_used_gain", "fresh_fresh_gain", "fresh_last_used", "fresh_last_fresh"), "?"), table
     names = list(by)
