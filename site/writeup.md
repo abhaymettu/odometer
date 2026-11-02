@@ -4,7 +4,7 @@ Training speedruns time you, so a result measures the idea and the GPU together,
 
 odometer charges every tensor operation a price in ticks, worked out from the tensor shapes alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server stop at the same reading with the same score, and a faster machine only gets there sooner. [The demo](https://abhaymettu.com/odometer/) shows this directly: it runs the current record's code in your tab at a smaller budget and stops on the same tick as native code.
 
-The current record is 1.0887 bits per byte, and the last 6 rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in ? seconds on a 2-core runner.
+The current record is 1.0887 bits per byte, and the 6 newest rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in ? seconds on a 2-core runner.
 
 ## Why a meter
 
@@ -26,7 +26,7 @@ The repo holds 79 entries written to cheat, and a test pins the exact way each o
 
 7 of 7 claims held up on 8 fresh seeds (Wilson 95% interval 0.65 to 1.00), and 5 became records. The plan predicted that claimed gains would shrink, and they did not: the median verified gain was 1.00 times the claimed one. These gains sit far above seed noise, where selection has little room to inflate anything, and I wouldn't expect that to hold nearer the noise.
 
-None of them replaced the model. Hashed context mixing was already the best recipe at this budget, and each record works inside it: fixing a padding artefact at the start of a window, a learned gate in place of hand-set constants, word contexts, fitting that gate on fresh bytes. A lot of this is specific to the track. About a third of one record's gain sits in the first 16 of 512 positions of a window, and about three quarters of another's comes from spending 36.5% more ticks at eval.
+None of them replaced the model. Hashed context mixing was already the best recipe at this budget, and each record works inside it: fixing a padding artefact at the start of a window, a learned gate in place of hand-set constants, word contexts, fitting that gate on fresh bytes, thinner high-order tables. A lot of this is specific to the track. About a third of one record's gain sits in the first 16 of 512 positions of a window, and about three quarters of another's comes from spending 36.5% more ticks at eval. The reviews also caught agents being wrong about their own work: one explanation was only half right, and another credited a change that cost ticks, where dropping stages was what paid for the gain.
 
 A session cost $2.21 to $4.49 at list price, and every transcript is in the repo.
 

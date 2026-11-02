@@ -124,7 +124,8 @@ def main():
     values, claims = series_values()
     fair, fair_table = fair_values()
     values |= fair | quick_values()
-    values |= {"attacks": str(sum(1 for p in (ROOT / "tests/attacks").glob("*.py") if p.stem != "legit_tiny")), "record_test": f"{head['test']:.4f}", "record_name": head["title"]}
+    values |= {"attacks": str(sum(1 for p in (ROOT / "tests/attacks").glob("*.py") if p.stem != "legit_tiny")), "record_test": f"{head['test']:.4f}", "record_name": head["title"],
+               "agent_records": str(sum(r["source"].startswith("agent") for r in rows))}
     tables = {"claims_table": html_table(CLAIMS_HEAD, claims_rows(claims)), "fair_table": html_table(FAIR_HEAD, fair_rows(fair_table))}
     copy = json.loads((DOCS / "copy.json").read_text())
     data = {"records": rows, "lead": fill(copy["lead"], values), "html": {k: fill(v, values | tables) for k, v in copy["html"].items()}}
@@ -139,9 +140,7 @@ def main():
     for key, body in copy["readme"].items():
         readme = put(readme, key, fill(body, values | tables))
     (ROOT / "README.md").write_text(readme)
-    agent_rows = sum(r["source"].startswith("agent") for r in rows)
-    template = ROOT / "site/writeup.in.md"
-    (ROOT / "site/writeup.md").write_text(fill(template.read_text(), values | {"agent_records": str(agent_rows)}))
+    (ROOT / "site/writeup.md").write_text(fill((ROOT / "site/writeup.in.md").read_text(), values))
     paper(values, claims, fair_table)
     print(f"{len(rows)} records, current {head['name']} {head['test']:.4f}")
 

@@ -5,7 +5,7 @@
 A speedrun for training a small language model, with a meter where the clock would be.
 
 <!-- quick -->
-**From a clean clone to a verified result in ? seconds on a 2-core runner ([log](https://github.com/abhaymettu/odometer)).** The current record scores 1.0887 bits per byte, and the last four rows of the table are Claude Code agents.
+**From a clean clone to a verified result in ? seconds on a 2-core runner ([log](https://github.com/abhaymettu/odometer)).** The current record scores 1.0887 bits per byte, and the 6 newest rows of the table came from Claude Code agents.
 <!-- /quick -->
 
 Every tensor operation costs ticks, priced from its shape alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server run the same program to the same reading and the same score, so hardware only buys finishing sooner. A record has to survive a rerun on fresh seeds by a verifier you can read in one sitting, and coding agents sit on the same table as everyone else.
