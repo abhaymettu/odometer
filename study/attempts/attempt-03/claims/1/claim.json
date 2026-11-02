@@ -1,0 +1,5 @@
+{
+ "claimed_dev_bpb": 1.1056,
+ "n_seeds": 8,
+ "why": "The record's model and training, with one change: the order 1 table takes a gradient every 4th step and orders 2 and 3 every 2nd, reading the table detached on other steps. Embedding backward costs 16 ticks per float and dominates a step, while low-order tables have few, constantly visited rows, so the saved ticks buy more steps for the high-order tables and the mixer. Measured with verify.py on 8 fresh seeds on dev: mean 1.1056, SD 0.0008, against the record's stated 1.1082 (SD 0.0008), a gain of about 0.0026. These 8 seeds were not used for selection, but the schedule was chosen from 27 variants compared on one seed and a 256-window subset of the same dev split, so the dev windows themselves are not independent of the choice. The gain is real against the plain comparison but only slightly above the track's 0.002 record margin, and from summary figures it does not reach that margin at alpha 0.01 (p about 0.07), so it may not qualify as a formal new record. Word contexts and thin high-order rows were tried and lost; other tuning was within single-seed noise of about 0.0015."
+}

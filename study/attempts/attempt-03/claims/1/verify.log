@@ -1,0 +1,13 @@
+1: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed  401865699  test bpb 1.1032  train 3.997e+10 ticks   106.3 s  eval 8,923 ticks/byte  twins 9.5e-06
+  seed  117795529  test bpb 1.1054  train 3.997e+10 ticks   106.8 s  eval 8,923 ticks/byte  twins 9.4e-06
+  seed 1181021911  test bpb 1.1035  train 3.997e+10 ticks   107.5 s  eval 8,923 ticks/byte  twins 8.6e-06
+  seed 1710778557  test bpb 1.1036  train 3.997e+10 ticks   107.7 s  eval 8,923 ticks/byte  twins 1.2e-05
+  seed  639420696  test bpb 1.1032  train 3.997e+10 ticks   107.6 s  eval 8,923 ticks/byte  twins 1.2e-05
+  seed   11817759  test bpb 1.1047  train 3.997e+10 ticks   107.7 s  eval 8,923 ticks/byte  twins 1.5e-05
+  seed 1895340853  test bpb 1.1048  train 3.997e+10 ticks   105.5 s  eval 8,923 ticks/byte  twins 1.0e-05
+  seed  197235119  test bpb 1.1038  train 3.997e+10 ticks   105.4 s  eval 8,923 ticks/byte  twins 1.2e-05
+  mean 1.1040 +- 0.0007 bpb (95% CI, n=8, sd 0.0008)
+  gain over the record: +0.0025 +- 0.0008 bpb, p = 0.12 (beyond a margin of 0.002)
+  not a record
+  log: study/attempts/attempt-03/claims/1/verify.json
