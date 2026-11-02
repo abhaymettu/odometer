@@ -134,7 +134,7 @@ The first three are free compute, but `item()` rations training bytes to 20,000 
 ## What it does not do
 
 - It has no memory or disk cap. The PPM recipe peaks near 1.2 GB.
-- Twin values on x86 have reached 2.1e-5 from float noise alone, against a tolerance of 1e-4, so the look-ahead check has about a factor of five to spare on honest entries.
+- Twin values reached 1.8e-5 across 944 stored seed runs, against a tolerance of 1e-4, so the look-ahead check has about a factor of five to spare on honest entries. I read those values as host float noise, since the same code often gives exactly 0 on another host, but I did not find the cause.
 - The seal on the test split stops accidents. TinyStories is public, so a determined entrant could rebuild the split. The static rules limit what that buys. During tuning, two smoke runs on one machine read 32 test windows by accident, and [the tuning log](entries/TUNING.md) records them.
 - Prices are close to time, not equal to it. On x86, 331 of 335 calibration rows sit within 5x of the median. A copying `reshape` and its backward run about 7x over their price, so an entry can spend more wall time than its ticks suggest, though copying teaches a model nothing. Squaring and `embedding` run about 6x to 7x under theirs. I froze the prices once records stood on them, so `tools/calibrate.py` exits nonzero on x86 and reads as a failed job in CI.
 - The score is one corpus and one budget. A 100-byte alphabet that helps here would cost dearly on anything else.

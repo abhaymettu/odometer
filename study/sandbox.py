@@ -14,7 +14,7 @@ from study.common import ROOT
 CONTEXT = verify.TRACK["eval_context"]
 ENV_NAMES = ["CLAUDE_CODE_OAUTH_TOKEN", "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB", "HOME", "LANG", "PATH", "PWD"]  # bwrap --chdir always sets PWD
 STANDIN_MOUNT = "/opt/standin"  # a mount under the repo would make the repo's study/ directory exist inside the box
-# An allowlist: DESIGN.md, RUNLOG.md, review/ and this folder state the study's goals and list exploits, and a new note
+# An allowlist: design notes, review/ and this folder state the study's goals and list exploits, and a new note
 # in the repo must not reach an agent by default.
 COPIED = ["verify.py", "stats.py", "odometer/*.py", "entries/*/train.py", "tools/calibrate.py", "tests/conftest.py", "tests/test_engine.py",
           "tests/test_attacks.py", "tests/attacks/*"]
