@@ -1,0 +1,11 @@
+10-mixer-fresh: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed 1275788228  test bpb 1.0923  train 3.998e+10 ticks   137.0 s  eval 12,171 ticks/byte  twins 9.5e-06
+  seed 1656469843  test bpb 1.0916  train 3.998e+10 ticks   136.4 s  eval 12,171 ticks/byte  twins 1.0e-05
+  seed 1504212123  test bpb 1.0928  train 3.998e+10 ticks   128.0 s  eval 12,171 ticks/byte  twins 1.0e-05
+  seed 1985559757  test bpb 1.0944  train 3.998e+10 ticks   128.1 s  eval 12,171 ticks/byte  twins 1.1e-05
+  seed   37660234  test bpb 1.0946  train 3.998e+10 ticks   133.6 s  eval 12,171 ticks/byte  twins 1.0e-05
+  seed  868383994  test bpb 1.0936  train 3.998e+10 ticks   133.9 s  eval 12,171 ticks/byte  twins 1.1e-05
+  seed  718777312  test bpb 1.0930  train 3.998e+10 ticks   130.8 s  eval 12,171 ticks/byte  twins 1.0e-05
+  seed  718098984  test bpb 1.0929  train 3.998e+10 ticks   130.8 s  eval 12,171 ticks/byte  twins 1.3e-05
+  mean 1.0931 +- 0.0008 bpb (95% CI, n=8, sd 0.0010)
+  log: study/nulls/10-mixer-fresh/5/verify.json
