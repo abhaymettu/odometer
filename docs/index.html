@@ -24,7 +24,7 @@
 <main>
 <section class="hero">
   <h1>A speedrun for training a small language model, with a meter where the clock would be.</h1>
-  <p class="lead">Every tensor operation costs ticks, priced from its shape alone. An entry gets 40 billion of them, so a laptop and a server run the same program to the same reading and the same score. Hardware only buys finishing sooner.</p>
+  <p class="lead">Every tensor operation costs ticks, priced from its shape alone. An entry gets 40 billion of them, so a laptop and a server run the same program to the same reading, with scores that agree far below the record margin. Hardware only buys finishing sooner.</p>
 
   <div class="instrument" id="instrument">
     <div class="wheels" id="wheels" role="img" aria-label="Odometer reading"></div>
@@ -55,7 +55,7 @@
 
 <section id="start">
   <h2>Check it yourself</h2>
-  <p>This reruns the current record on 2 fresh seeds on the sealed split, and prints your number next to the stored one. <span id="quick-time"></span></p>
+  <p>This reruns the current record on 2 fresh seeds on the test split, and prints your number next to the stored one. <span id="quick-time"></span></p>
   <pre class="cmd"><code>git clone https://github.com/abhaymettu/odometer &amp;&amp; cd odometer
 python3 -m venv .venv &amp;&amp; .venv/bin/pip install numpy==2.5.4
 .venv/bin/python reproduce.py</code></pre>

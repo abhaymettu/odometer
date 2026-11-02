@@ -1,0 +1,15 @@
+{
+ "trials": 4000,
+ "claims": 7,
+ "all_replicate_if_exact": 1.0,
+ "all_replicate_if_half": 0.6905,
+ "replicated_power_one_sd": 0.2865,
+ "record_rule_sd": 0.001,
+ "record_rule_power": {
+  "0.001": 0.0,
+  "0.002": 0.00075,
+  "0.003": 0.14375,
+  "0.004": 0.815,
+  "0.005": 0.99775
+ }
+}
