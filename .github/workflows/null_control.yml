@@ -1,6 +1,10 @@
 name: null-control
 on:
   workflow_dispatch:
+    inputs:
+      record:
+        description: the record's folder name
+        required: true
 
 jobs:
   nulls:
@@ -17,7 +21,9 @@ jobs:
           path: data
           key: data-${{ hashFiles('prepare.py') }}
       - run: python prepare.py
-      - run: python -m study.null_control
+      - env:
+          RECORD: ${{ inputs.record }}
+        run: python -m study.null_control --record "$RECORD"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

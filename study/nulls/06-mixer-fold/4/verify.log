@@ -1,0 +1,11 @@
+06-mixer-fold: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed  894777590  test bpb 1.1448  train 3.996e+10 ticks   107.7 s  eval 11,459 ticks/byte  twins 7.7e-06
+  seed 1081322646  test bpb 1.1426  train 3.996e+10 ticks   107.9 s  eval 11,459 ticks/byte  twins 8.6e-06
+  seed  384843463  test bpb 1.1432  train 3.996e+10 ticks   111.9 s  eval 11,459 ticks/byte  twins 7.6e-06
+  seed 1401003886  test bpb 1.1443  train 3.996e+10 ticks   112.1 s  eval 11,459 ticks/byte  twins 8.6e-06
+  seed  149292956  test bpb 1.1418  train 3.996e+10 ticks   111.5 s  eval 11,459 ticks/byte  twins 8.6e-06
+  seed 1875032900  test bpb 1.1448  train 3.996e+10 ticks   111.3 s  eval 11,459 ticks/byte  twins 6.7e-06
+  seed 1208396703  test bpb 1.1441  train 3.996e+10 ticks   110.7 s  eval 11,459 ticks/byte  twins 8.5e-06
+  seed   75179786  test bpb 1.1449  train 3.996e+10 ticks   111.1 s  eval 11,459 ticks/byte  twins 1.2e-05
+  mean 1.1438 +- 0.0010 bpb (95% CI, n=8, sd 0.0012)
+  log: study/nulls/06-mixer-fold/4/verify.json
