@@ -1,0 +1,40 @@
+{
+  "kind": "project",
+  "title": "odometer",
+  "gist": "A speedrun for training a small language model, with a meter where the clock would be. Every tensor operation costs ticks priced from its shape, so a laptop and a server stop at the same reading, and a record has to survive a rerun on fresh seeds.",
+  "summary": "Lets a person or a coding agent try to beat a training record on hardware they own, and lets anyone check a record from a clean clone.",
+  "repo": "https://github.com/abhaymettu/odometer",
+  "hero_image": {
+    "light": "docs/fig/ladder.svg",
+    "alt": "The record table as a ladder: test bits per byte falling from 1.7058 for the small GPT recipe to 1.0887 for the current record, with the 6 newest rows marked as written by agents."
+  },
+  "headline_numbers": [
+    {
+      "label": "current record, test bits per byte",
+      "value": "1.0887",
+      "command": "python reproduce.py"
+    },
+    {
+      "label": "agent claims that cleared the record rule",
+      "value": "5 of 7",
+      "command": "python reproduce.py series"
+    },
+    {
+      "label": "entries written to cheat, each with a pinned outcome",
+      "value": "79",
+      "command": "python reproduce.py attacks"
+    }
+  ],
+  "links": [
+    {
+      "label": "Run the record in your browser",
+      "href": "https://abhaymettu.github.io/odometer/"
+    }
+  ],
+  "site": {
+    "eyebrow": "Training speedrun · 40 billion ticks · 6 agent attempts · MIT",
+    "blurb": "A speedrun where every tensor operation costs ticks priced from its shape, so hardware only buys finishing sooner. Coding agents took the record from 1.1440 to 1.0887 bits per byte, and 5 of 7 claims cleared the record rule. The recipes at the bottom were ported with an agent too and no person has run the track, so nothing here compares agents with people.",
+    "group": "ml",
+    "field": "ml"
+  }
+}

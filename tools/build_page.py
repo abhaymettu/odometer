@@ -112,7 +112,7 @@ def branch_values():
     biggest = max(abs(a["bpb"] - b["bpb"]) for log in logs[1:] for a, b in zip(logs[0]["seeds"], log["seeds"]))
     if len(ticks) == 1:
         return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, also read the same ticks on all {len(logs)} machines, with scores within {biggest:.1e}."}
-    return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, did not read the same ticks on all {len(logs)} machines, and its scores differed by up to {biggest:.1e}. So the claim holds for programs that do not branch on values, which covers all {{record_count}} records."}
+    return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, did not read the same ticks on all {len(logs)} machines, and its scores differed by up to {biggest:.1e}. So the claim holds for programs that do not branch on values, which covers all {len(list((ROOT / 'records').glob('[0-9]*')))} records."}
 
 
 def fair_values():
@@ -174,11 +174,16 @@ def tex_table(head, rows, spec):
     return "\n".join(lines + [" & ".join(map(esc, r)) + r" \\" for r in rows] + [r"\bottomrule", r"\end{tabular}"]) + "\n"
 
 
+def tex_value(v):
+    v = v.replace("_", "\\_").replace("%", "\\%")
+    return re.sub(r"`([^`]*)`", r"\\texttt{\1}", v)
+
+
 def paper(values, claims, fair_table, fresh_table, fresh_head):
     """Everything numeric in the paper comes through paper/numbers.tex and the two generated tables."""
     out = ROOT / "paper"
     macro = lambda key: "v" + key.replace("_", "").replace("003", "OOO").replace("004", "OOF")
-    (out / "numbers.tex").write_text("".join(rf"\newcommand{{\{macro(k)}}}{{{v.replace('_', chr(92) + '_').replace('%', chr(92) + '%')}}}" + "\n" for k, v in values.items()))
+    (out / "numbers.tex").write_text("".join(rf"\newcommand{{\{macro(k)}}}{{{tex_value(v)}}}" + "\n" for k, v in values.items()))
     (out / "claims.tex").write_text(tex_table(CLAIMS_HEAD, claims_rows(claims), "lllllc"))
     (out / "fair.tex").write_text(tex_table(FAIR_HEAD, fair_rows(fair_table), "lcccc"))
     (out / "fresh.tex").write_text(tex_table(fresh_head, fresh_table, "lccc"))
@@ -191,7 +196,8 @@ def main():
     fair, fair_table = fair_values()
     values |= fair | quick_values()
     values |= {"attacks": str(sum(1 for p in (ROOT / "tests/attacks").glob("*.py") if p.stem != "legit_tiny")), "record_test": f"{head['test']:.4f}", "record_name": head["title"],
-               "agent_records": str(sum(r["source"].startswith("agent") for r in rows))}
+               "agent_records": str(sum(r["source"].startswith("agent") for r in rows)),
+               "recipe_test": f"{min(r['test'] for r in rows if not r['source'].startswith('agent')):.4f}"}
     fresh, fresh_table = fresh_values(rows)
     values |= twin_values() | seed_time_values() | power_values() | fresh | branch_values() | {"record_count": str(len(rows))}
     FRESH_HEAD = ("Record", "Usual 1024 windows", "Next 1024 windows", "Difference")

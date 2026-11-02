@@ -4,7 +4,7 @@ Training speedruns time you, so a result measures the idea and the GPU together,
 
 odometer charges every tensor operation a price in ticks, worked out from the tensor shapes alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server stop at the same reading, with scores that agree far below the record margin, and a faster machine only gets there sooner. [The demo](https://abhaymettu.github.io/odometer/) shows this directly: it runs the current record's code in your tab at a smaller budget and stops on the same tick as native code.
 
-The current record is 1.0887 bits per byte, and the 6 newest rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in ? seconds on a 2-core runner.
+The current record is 1.0887 bits per byte, against 1.1555 for the best recipe ported from the literature, and the 6 newest rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in 102 seconds on a 2-core runner.
 
 ## Why a meter
 
