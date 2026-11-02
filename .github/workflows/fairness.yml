@@ -3,7 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       entry:
-        default: records/06-mixer-fold/train.py
+        description: defaults to the current record
+        required: false
       seeds:
         description: the same comma list on every machine
         required: true
@@ -30,8 +31,12 @@ jobs:
       - env:
           ENTRY: ${{ inputs.entry }}
           SEEDS: ${{ inputs.seeds }}
-        run: python verify.py "$ENTRY" --seeds "$SEEDS" --split dev --out out/${{ matrix.os }}.json
+        run: |
+          mkdir -p out
+          python docs/demo/harness.py > out/demo-${{ matrix.os }}.json
+          current=$(python -c "import json; print(json.load(open('records/current.json'))['name'])")
+          python verify.py "${ENTRY:-records/$current/train.py}" --seeds "$SEEDS" --split dev --out out/${{ matrix.os }}.json
       - uses: actions/upload-artifact@v4
         with:
           name: fair-${{ matrix.os }}
-          path: out/${{ matrix.os }}.json
+          path: out/

@@ -1,0 +1,11 @@
+{
+ "01-gpt": {"short": "Small GPT", "title": "Small GPT", "who": "Recipe after Karpathy's nanoGPT, ported and tuned here"},
+ "02-rnn": {"short": "Character RNN", "title": "Character RNN", "who": "Recipe after Karpathy's char-rnn, ported and tuned here"},
+ "03-modern": {"short": "Modern transformer", "title": "Modern transformer", "who": "Recipe from recent small-model practice, ported and tuned here"},
+ "04-ppm": {"short": "PPM", "title": "PPM with learned backoff", "who": "Recipe after Cleary and Witten's PPM, ported and tuned here"},
+ "05-mixer": {"short": "Hashed mixing", "title": "Hashed context mixing", "who": "Recipe after Mahoney's PAQ and Knoll's cmix, ported and tuned here"},
+ "06-mixer-fold": {"short": "Folded head", "title": "Mixing, folded head, lazy tables", "who": "Claude Opus 5.5, in a pilot before the series"},
+ "07-mixer-cold": {"short": "Cold-start fix", "title": "Mixing, cold-start fix", "who": "Claude Opus 5.5, attempt-01 of the series"},
+ "08-mixer-gate": {"short": "Learned gate", "title": "Mixing, learned in-window gate", "who": "Claude Opus 5.5, attempt-02 of the series"},
+ "09-mixer-words": {"short": "Words", "title": "Mixing, words and story boundaries", "who": "Claude Opus 5.5, attempt-04 of the series"}
+}

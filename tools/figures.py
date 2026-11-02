@@ -106,7 +106,7 @@ def ablation():
 
 def ladder():
     rows = []
-    names = {"01-gpt": "Small GPT", "02-rnn": "Character RNN", "03-modern": "Modern transformer", "04-ppm": "PPM", "05-mixer": "Hashed mixing", "06-mixer-fold": "Folded head, lazy tables"}
+    names = {k: v["short"] for k, v in json.loads((ROOT / "records/names.json").read_text()).items()}
     for d in sorted((ROOT / "records").glob("[0-9]*")):
         log = json.loads((d / "log.json").read_text())
         rows.append((names.get(d.name, d.name), log["confirmation_summary"]["mean_bpb"], log["source"].startswith("agent")))

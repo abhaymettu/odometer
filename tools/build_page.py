@@ -11,22 +11,15 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 REPO = "https://github.com/abhaymettu/odometer"
 
-TITLES = {
-    "01-gpt": ("Small GPT", "Recipe after Karpathy's nanoGPT, ported and tuned here"),
-    "02-rnn": ("Character RNN", "Recipe after Karpathy's char-rnn, ported and tuned here"),
-    "03-modern": ("Modern transformer", "Recipe from recent small-model practice, ported and tuned here"),
-    "04-ppm": ("PPM with learned backoff", "Recipe after Cleary and Witten's PPM, ported and tuned here"),
-    "05-mixer": ("Hashed context mixing", "Recipe after Mahoney's PAQ and Knoll's cmix, ported and tuned here"),
-    "06-mixer-fold": ("Mixing, folded head, lazy tables", "Claude Opus 5.5, in a pilot before the series"),
-}
 
 
 def records():
     current = json.loads((ROOT / "records/current.json").read_text())["name"]
+    names = json.loads((ROOT / "records/names.json").read_text())
     rows = []
     for d in sorted((ROOT / "records").glob("[0-9]*"), reverse=True):
         log = json.loads((d / "log.json").read_text())
-        title, who = TITLES.get(d.name, (d.name, log["source"]))
+        title, who = names[d.name]["title"], names[d.name]["who"]
         out = DOCS / "records" / d.name
         out.mkdir(parents=True, exist_ok=True)
         shutil.copy2(d / "train.py", out / "train.py")
