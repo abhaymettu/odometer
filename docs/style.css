@@ -84,8 +84,10 @@ details.rec > summary::-webkit-details-marker { display: none; }
 .review { max-width: 72ch; font-size: 0.9375rem; white-space: pre-wrap; overflow-wrap: anywhere; }
 .links { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.9375rem; }
 .cmd { background: var(--panel); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; margin: 12px 0; }
-.fig { margin: 18px 0 8px; }
-.fig svg { display: block; width: 100%; height: auto; }
+.fig { margin: 18px 0 8px; overflow-x: auto; }
+.fig svg { display: block; width: 100%; min-width: 680px; height: auto; }
+.plainlist { padding-left: 1.1em; max-width: 72ch; }
+.plainlist li { margin: 0 0 10px; }
 .fig figcaption { color: var(--muted); font-size: 0.9375rem; margin-top: 8px; max-width: 66ch; }
 .plain { width: 100%; border-collapse: collapse; font-size: 0.9375rem; margin: 14px 0; display: block; overflow-x: auto; }
 .plain th { text-align: left; font-weight: 560; color: var(--muted); padding: 6px 14px 6px 0; border-bottom: 1px solid var(--line); white-space: nowrap; }

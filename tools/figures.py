@@ -105,24 +105,26 @@ def ablation():
 
 
 def ladder():
-    rows = []
     names = {k: v["short"] for k, v in json.loads((ROOT / "records/names.json").read_text()).items()}
+    rows = []
     for d in sorted((ROOT / "records").glob("[0-9]*")):
         log = json.loads((d / "log.json").read_text())
         rows.append((names.get(d.name, d.name), log["confirmation_summary"]["mean_bpb"], log["source"].startswith("agent")))
-    W, H, L, R, T, B = 960, 320, 56, 150, 18, 34
-    lo, hi = 1.05, 1.8
-    X = lambda i: L + (i + 0.5) / len(rows) * (W - L - R)
-    Y = lambda v: T + (hi - v) / (hi - lo) * (H - T - B)
+    H_ROW, T, B = 32, 40, 44
+    W, H, L, R = 960, T + H_ROW * len(rows) + B, 210, 170
+    lo, hi = 1.05, 1.75
+    X = lambda v: L + (hi - v) / (hi - lo) * (W - L - R)
+    Y = lambda i: T + (i + 0.5) * H_ROW
     body = ""
-    for v in (1.2, 1.4, 1.6, 1.8):
-        body += f'<path class="g" d="M{L} {Y(v):.1f}H{W - R}"/>' + text(L - 10, Y(v) + 4, f"{v:.1f}", "m", "end")
-    body += text(L, H - 6, "Test bits per byte on 8 fresh seeds. Seed spread is smaller than the marks.", "m")
-    path = "".join((f"M{X(i):.1f} {Y(v):.1f}" if i == 0 else f"V{Y(v):.1f}") + f"H{X(i + 1) if i < len(rows) - 1 else W - R:.1f}" for i, (_, v, _a) in enumerate(rows))
+    for v in (1.7, 1.5, 1.3, 1.1):
+        body += f'<path class="g" d="M{X(v):.1f} {T - 6}V{H - B}"/>' + text(X(v), T - 14, f"{v:.1f}", "m", "middle")
+    path = f"M{X(rows[0][1]):.1f} {Y(0):.1f}" + "".join(f"V{Y(i):.1f}H{X(v):.1f}" for i, (_, v, _a) in enumerate(rows) if i)
     body += f'<path class="l" d="{path}"/>'
     for i, (name, v, agent) in enumerate(rows):
-        body += marker("diamond" if agent else "circle", X(i), Y(v), "pa" if agent else "p")
-        body += text(X(i) + 8, Y(v) - 9, f"{name}", "a b" if agent else "b") + text(X(i) + 8, Y(v) + 18, f"{v:.4f}" + ("  agent" if agent else "  recipe"), "a" if agent else "m")
+        cls = "a" if agent else ""
+        body += text(L - 18, Y(i) + 4.5, name, f"{cls} b", "end") + marker("diamond" if agent else "circle", X(v), Y(i), "pa" if agent else "p")
+        body += text(W - R + 18, Y(i) + 4.5, f"{v:.4f}", f"{cls} b") + text(W - R + 78, Y(i) + 4.5, "agent" if agent else "recipe", cls or "m")
+    body += text(L, H - 12, "Test bits per byte on 8 fresh seeds, lower is better. Seed spread is smaller than the marks.", "m")
     svg("ladder.svg", W, H, body, "The record table: test bits per byte falling with each new record")
 
 
@@ -139,7 +141,9 @@ def claims():
     lo = min(0.0, *[t["gain"] - t["ci95"] for t in rows], *[t["claimed_gain"] for t in rows])
     hi = max(*[t["gain"] + t["ci95"] for t in rows], *[t["claimed_gain"] for t in rows]) * 1.04
     X = lambda v: L + (v - lo) / (hi - lo) * (W - L - R)
-    body = f'<path class="g" d="M{X(0):.1f} {T}V{H - B}"/>' + text(X(0), H - B + 18, "0", "m", "middle")
+    body = ""
+    for v in (0, 0.005, 0.01, 0.015, 0.02):
+        body += f'<path class="g" d="M{X(v):.1f} {T}V{H - B}"/>' + text(X(v), H - B + 18, f"{v:g}", "m", "middle")
     body += text(L, H - 6, "Gain over the starting record, bits per byte. Filled mark: verified on 8 fresh seeds, with its 95% interval. Open mark: what the agent claimed.", "m")
     for i, t in enumerate(rows):
         y = T + 16 + i * 30

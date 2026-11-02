@@ -1,11 +1,52 @@
 {
- "01-gpt": {"short": "Small GPT", "title": "Small GPT", "who": "Recipe after Karpathy's nanoGPT, ported and tuned here"},
- "02-rnn": {"short": "Character RNN", "title": "Character RNN", "who": "Recipe after Karpathy's char-rnn, ported and tuned here"},
- "03-modern": {"short": "Modern transformer", "title": "Modern transformer", "who": "Recipe from recent small-model practice, ported and tuned here"},
- "04-ppm": {"short": "PPM", "title": "PPM with learned backoff", "who": "Recipe after Cleary and Witten's PPM, ported and tuned here"},
- "05-mixer": {"short": "Hashed mixing", "title": "Hashed context mixing", "who": "Recipe after Mahoney's PAQ and Knoll's cmix, ported and tuned here"},
- "06-mixer-fold": {"short": "Folded head", "title": "Mixing, folded head, lazy tables", "who": "Claude Opus 5.5, in a pilot before the series"},
- "07-mixer-cold": {"short": "Cold-start fix", "title": "Mixing, cold-start fix", "who": "Claude Opus 5.5, attempt-01 of the series"},
- "08-mixer-gate": {"short": "Learned gate", "title": "Mixing, learned in-window gate", "who": "Claude Opus 5.5, attempt-02 of the series"},
- "09-mixer-words": {"short": "Words", "title": "Mixing, words and story boundaries", "who": "Claude Opus 5.5, attempt-04 of the series"}
+ "01-gpt": {
+  "short": "Small GPT",
+  "title": "Small GPT",
+  "who": "Recipe after Karpathy's nanoGPT, ported and tuned here"
+ },
+ "02-rnn": {
+  "short": "Character RNN",
+  "title": "Character RNN",
+  "who": "Recipe after Karpathy's char-rnn, ported and tuned here"
+ },
+ "03-modern": {
+  "short": "Modern transformer",
+  "title": "Modern transformer",
+  "who": "Recipe from recent small-model practice, ported and tuned here"
+ },
+ "04-ppm": {
+  "short": "PPM",
+  "title": "PPM with learned backoff",
+  "who": "Recipe after Cleary and Witten's PPM, ported and tuned here"
+ },
+ "05-mixer": {
+  "short": "Hashed mixing",
+  "title": "Hashed context mixing",
+  "who": "Recipe after Mahoney's PAQ and Knoll's cmix, ported and tuned here",
+  "why": "The review of this record says 9,941 eval ticks per byte, while the logs read 11,153."
+ },
+ "06-mixer-fold": {
+  "short": "Folded head",
+  "title": "Mixing, folded head, lazy tables",
+  "who": "Claude Opus 5.5, in a pilot before the series",
+  "why": "A pilot result, so it counts toward nothing in the series. Rare bytes share softmax classes and big tables update less often, which frees ticks for more training bytes. That is a reallocation inside the price list and not a new model, and a 100-byte alphabet only suits near-ASCII text. The session ran 23 trainings, not the 14 its notes mention. A 16-seed check during review read 1.1437 against the seated 1.1440."
+ },
+ "07-mixer-cold": {
+  "short": "Cold-start fix",
+  "title": "Mixing, cold-start fix",
+  "who": "Claude Opus 5.5, attempt-01 of the series",
+  "why": "About a third of the gain (0.0061 of 0.0187, one seed, dev) sits in the first 16 of 512 positions of a window, where masking fixes a padding artefact. That share falls to about 0.0005 on a 5,120-byte window and to zero with real context. This agent's smaller alphabet can't name the digits 0, 1, 2 and 7 or parentheses, and rare bytes cost 0.00058 on test against 0.00013 on dev. The session ran 60 trainings of 42 variants and about 1,600 offline scorings."
+ },
+ "08-mixer-gate": {
+  "short": "Learned gate",
+  "title": "Mixing, learned in-window gate",
+  "who": "Claude Opus 5.5, attempt-02 of the series",
+  "why": "The gain read 0.0172 on dev and 0.0185 on test, and the favourable gap of 0.0013 is unexplained. The attribution of the gain to its parts is the agent's own, on few seeds. On x86 the gate phase runs 5.4 to 5.9 times the table phase's nanoseconds per tick, cause not found, so this record takes longer than its ticks suggest. Three of the agent's smoke checks fell through to the zeroed test split."
+ },
+ "09-mixer-words": {
+  "short": "Words",
+  "title": "Mixing, words and story boundaries",
+  "who": "Claude Opus 5.5, attempt-04 of the series",
+  "why": "About three quarters of the gain is eval-time modelling, paid for with 36.5% more eval ticks, a split measured only by single-seed dev runs. The story-boundary part depends on this corpus's NUL separator. Twin values reached 1.43e-5, inferred to be host float noise and below the tolerance of 1e-4. Host-adjusted wall time per tick is about 8.8% over the previous record, also inferred."
+ }
 }
