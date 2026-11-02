@@ -1,0 +1,218 @@
+[
+ {
+  "entry": "records/11-mixer-thin/train.py",
+  "budget": 2500000000,
+  "seeds": [
+   {
+    "seed": 1961499038,
+    "status": "ok",
+    "train_ticks": 2490526213,
+    "train_seconds": 7.810382914999998,
+    "item_reads": 0,
+    "train_python_lines": 108482,
+    "peak_rss_mb": 193.22265625,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.370235278462723,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.2467014515848973e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 23.395330985
+   },
+   {
+    "seed": 1173603810,
+    "status": "ok",
+    "train_ticks": 2490526213,
+    "train_seconds": 7.898878306999997,
+    "item_reads": 0,
+    "train_python_lines": 108482,
+    "peak_rss_mb": 195.23046875,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.3723599993613773,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.544696843325255e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 23.1525622
+   },
+   {
+    "seed": 1589946537,
+    "status": "ok",
+    "train_ticks": 2490526213,
+    "train_seconds": 4.890123397999993,
+    "item_reads": 0,
+    "train_python_lines": 108482,
+    "peak_rss_mb": 193.625,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.3796327215089808,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.3351079298118407e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 15.43392446
+   }
+  ]
+ },
+ {
+  "entry": "records/11-mixer-thin/train.py",
+  "budget": 10000000000,
+  "seeds": [
+   {
+    "seed": 1807912228,
+    "status": "ok",
+    "train_ticks": 9986080380,
+    "train_seconds": 32.877852528999995,
+    "item_reads": 0,
+    "train_python_lines": 428653,
+    "peak_rss_mb": 195.72265625,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.1778677734182479,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.0488007422537748e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 23.663376053999997
+   },
+   {
+    "seed": 371175003,
+    "status": "ok",
+    "train_ticks": 9986080380,
+    "train_seconds": 32.887189430999996,
+    "item_reads": 0,
+    "train_python_lines": 428653,
+    "peak_rss_mb": 195.56640625,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.1730805423219153,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.14854874562198e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 24.093658935999997
+   },
+   {
+    "seed": 534743683,
+    "status": "ok",
+    "train_ticks": 9986080380,
+    "train_seconds": 19.73982221,
+    "item_reads": 0,
+    "train_python_lines": 428653,
+    "peak_rss_mb": 195.921875,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.17717888947756,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.2397700343669271e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 15.588970154999998
+   }
+  ]
+ },
+ {
+  "entry": "records/11-mixer-thin/train.py",
+  "budget": 40000000000,
+  "seeds": [
+   {
+    "seed": 766280303,
+    "status": "ok",
+    "train_ticks": 39988399260,
+    "train_seconds": 121.24031673300001,
+    "item_reads": 0,
+    "train_python_lines": 1710565,
+    "peak_rss_mb": 196.421875,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.090186798555435,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.0490374521054946e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 22.641577343999984
+   },
+   {
+    "seed": 974978476,
+    "status": "ok",
+    "train_ticks": 39988399260,
+    "train_seconds": 121.30811176400002,
+    "item_reads": 0,
+    "train_python_lines": 1710565,
+    "peak_rss_mb": 196.51171875,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.0898078222994028,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 8.582878338714295e-06,
+    "eval_python_lines": 103412,
+    "eval_seconds": 22.604335324000033
+   },
+   {
+    "seed": 597070753,
+    "status": "ok",
+    "train_ticks": 39988399260,
+    "train_seconds": 75.33064290499999,
+    "item_reads": 0,
+    "train_python_lines": 1710565,
+    "peak_rss_mb": 196.81640625,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.090177421211817,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 7.694084963816294e-06,
+    "eval_python_lines": 103412,
+    "eval_seconds": 14.954372784999975
+   }
+  ]
+ },
+ {
+  "entry": "records/11-mixer-thin/train.py",
+  "budget": 160000000000,
+  "seeds": [
+   {
+    "seed": 715202125,
+    "status": "ok",
+    "train_ticks": 159985499534,
+    "train_seconds": 479.386592981,
+    "item_reads": 0,
+    "train_python_lines": 6837472,
+    "peak_rss_mb": 197.14453125,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.0513257719155553,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 7.5758598807595945e-06,
+    "eval_python_lines": 103412,
+    "eval_seconds": 22.113189592000026
+   },
+   {
+    "seed": 102641511,
+    "status": "ok",
+    "train_ticks": 159985499534,
+    "train_seconds": 479.20623550000005,
+    "item_reads": 0,
+    "train_python_lines": 6837472,
+    "peak_rss_mb": 197.27734375,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.0511045506711518,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 8.577399160714094e-06,
+    "eval_python_lines": 103412,
+    "eval_seconds": 22.03625564799995
+   },
+   {
+    "seed": 2064266654,
+    "status": "ok",
+    "train_ticks": 159985499534,
+    "train_seconds": 297.808196877,
+    "item_reads": 0,
+    "train_python_lines": 6837472,
+    "peak_rss_mb": 197.484375,
+    "params": 4156376,
+    "split": "dev",
+    "bpb": 1.0518651805096952,
+    "eval_ticks_per_byte": 8059.072998046875,
+    "twin_max_diff": 1.0461144825058e-05,
+    "eval_python_lines": 103412,
+    "eval_seconds": 14.982500058999904
+   }
+  ]
+ }
+]

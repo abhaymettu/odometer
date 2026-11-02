@@ -1,0 +1,33 @@
+name: fresh-windows
+on:
+  workflow_dispatch:
+    inputs:
+      seeds:
+        default: "7001,7002,7003,7004,7005,7006,7007,7008"
+
+jobs:
+  score:
+    strategy:
+      fail-fast: false
+      matrix:
+        record: [05-mixer, 06-mixer-fold, 07-mixer-cold, 08-mixer-gate, 09-mixer-words, 10-mixer-fresh, 11-mixer-thin]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy==2.5.4
+      - uses: actions/cache@v4
+        with:
+          path: data
+          key: data-${{ hashFiles('prepare.py') }}
+      - run: python prepare.py
+      - env:
+          SEEDS: ${{ inputs.seeds }}
+        run: python tools/fresh_windows.py records/${{ matrix.record }}/train.py --seeds "$SEEDS" --out ${{ matrix.record }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fresh-${{ matrix.record }}
+          path: ${{ matrix.record }}.json
