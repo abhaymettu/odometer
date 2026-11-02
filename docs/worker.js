@@ -1,5 +1,5 @@
 // Runs the demo track off the main thread, so the wheels stay smooth while Python trains.
-const PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/";
+const PYODIDE = new URL("vendor/pyodide/", self.location).href;
 const FILES = ["harness.py", "train.py", "dev.bin", "train.bin.gz", "odometer/__init__.py", "odometer/_engine.py", "odometer/_data.py"];
 
 self.onmessage = async () => {

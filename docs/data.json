@@ -1,6 +1,102 @@
 {
  "records": [
   {
+   "name": "09-mixer-words",
+   "title": "09-mixer-words",
+   "who": "agent: Claude Opus 5.5, high effort, attempt-04 claim 1 (counted)",
+   "source": "agent: Claude Opus 5.5, high effort, attempt-04 claim 1 (counted)",
+   "test": 1.0975912494229763,
+   "sd": 0.0013531366797836569,
+   "dev": 1.0993866321129864,
+   "seeds": [
+    1.0969865253881534,
+    1.0996950421293692,
+    1.0954678769154182,
+    1.0982439107034319,
+    1.096563638737729,
+    1.0974583156335522,
+    1.0973278970965301,
+    1.098986788779626
+   ],
+   "current": true,
+   "code": "records/09-mixer-words/train.py",
+   "review": "records/09-mixer-words/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/09-mixer-words/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/09-mixer-words"
+    ]
+   ]
+  },
+  {
+   "name": "08-mixer-gate",
+   "title": "08-mixer-gate",
+   "who": "agent: Claude Opus 5.5, high effort, attempt-02 claim 1 (counted)",
+   "source": "agent: Claude Opus 5.5, high effort, attempt-02 claim 1 (counted)",
+   "test": 1.106510725249074,
+   "sd": 0.0007228203202949496,
+   "dev": 1.1081959070432532,
+   "seeds": [
+    1.1070381612940727,
+    1.1063091884112197,
+    1.1065537682304323,
+    1.1051823651050474,
+    1.1074003037043854,
+    1.1069855784034441,
+    1.1067946502684876,
+    1.105821786575503
+   ],
+   "current": false,
+   "code": "records/08-mixer-gate/train.py",
+   "review": "records/08-mixer-gate/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/08-mixer-gate/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/08-mixer-gate"
+    ]
+   ]
+  },
+  {
+   "name": "07-mixer-cold",
+   "title": "07-mixer-cold",
+   "who": "agent: Claude Opus 5.5, high effort, attempt-01 claim 1 (counted)",
+   "source": "agent: Claude Opus 5.5, high effort, attempt-01 claim 1 (counted)",
+   "test": 1.1256475105673858,
+   "sd": 0.0006584416834233236,
+   "dev": 1.1258254766519415,
+   "seeds": [
+    1.12611996241957,
+    1.124691079462145,
+    1.126387816137586,
+    1.1260833433351085,
+    1.1255612474315475,
+    1.1251258582173245,
+    1.1262671037397665,
+    1.1249436737960383
+   ],
+   "current": false,
+   "code": "records/07-mixer-cold/train.py",
+   "review": "records/07-mixer-cold/review.md",
+   "links": [
+    [
+     "Code on GitHub",
+     "https://github.com/abhaymettu/odometer/blob/main/records/07-mixer-cold/train.py"
+    ],
+    [
+     "Seed logs",
+     "https://github.com/abhaymettu/odometer/tree/main/records/07-mixer-cold"
+    ]
+   ]
+  },
+  {
    "name": "06-mixer-fold",
    "title": "Mixing, folded head, lazy tables",
    "who": "Claude Opus 5.5, in a pilot before the series",
@@ -18,7 +114,7 @@
     1.1460497327310877,
     1.1448490662989323
    ],
-   "current": true,
+   "current": false,
    "code": "records/06-mixer-fold/train.py",
    "review": "records/06-mixer-fold/review.md",
    "links": [
