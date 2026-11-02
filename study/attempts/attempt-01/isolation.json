@@ -1,0 +1,22 @@
+{
+ "env": [
+  "CLAUDE_CODE_OAUTH_TOKEN",
+  "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB",
+  "HOME",
+  "LANG",
+  "PATH",
+  "PWD"
+ ],
+ "home_entries": [],
+ "visible": [],
+ "siblings": [
+  "attempt-01"
+ ],
+ "pids": 2,
+ "capabilities": "0000000000000000",
+ "claude_config": [],
+ "test_windows": 21544,
+ "test_nonzero_bytes": 0,
+ "dev_windows": 21545,
+ "dev_sha256": "a15e47a38c8f281f78b855528f82f1023f669dce0340ad656043c41183cd4076"
+}
