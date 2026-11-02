@@ -1,0 +1,202 @@
+{
+ "attempts": {
+  "started": 4,
+  "counted": 4,
+  "excluded": [],
+  "pending": [],
+  "with_no_claims": 0,
+  "with_tool_denials": 0
+ },
+ "claims": {
+  "total": 4,
+  "replicated": 4,
+  "refuted": 0,
+  "inconclusive": 0,
+  "rejected": 0
+ },
+ "survival_per_claim": {
+  "k": 4,
+  "n": 4,
+  "rate": 1.0,
+  "lo": 0.5101091596030786,
+  "hi": 0.9999999999999999
+ },
+ "survival_per_attempt": {
+  "k": 4,
+  "n": 4,
+  "rate": 1.0,
+  "lo": 0.5101091596030786,
+  "hi": 0.9999999999999999
+ },
+ "shrinkage": {
+  "n": 4,
+  "median": 1.0229539150144231,
+  "min": 0.9554518356427101,
+  "max": 1.0903968572691354,
+  "left_out_no_claimed_gain": 0
+ },
+ "records": 3,
+ "seed_runs_per_claim": {
+  "n": 4,
+  "median": 14.5,
+  "min": 8,
+  "max": 44
+ },
+ "best_verified_gain": 0.0187826056062399,
+ "survival_by_base_record": {
+  "06-mixer-fold": {
+   "k": 1,
+   "n": 1,
+   "rate": 1.0,
+   "lo": 0.2065493117918027,
+   "hi": 1.0
+  },
+  "07-mixer-cold": {
+   "k": 1,
+   "n": 1,
+   "rate": 1.0,
+   "lo": 0.2065493117918027,
+   "hi": 1.0
+  },
+  "08-mixer-gate": {
+   "k": 2,
+   "n": 2,
+   "rate": 1.0,
+   "lo": 0.3423802239546494,
+   "hi": 1.0
+  }
+ },
+ "claims_table": [
+  {
+   "attempt": "attempt-01",
+   "n": 1,
+   "base": "06-mixer-fold",
+   "claimed_gain": 0.018363973272884193,
+   "gain": 0.018450979457496075,
+   "ci95": 0.0010710972080032496,
+   "p": 2.467835197413953e-12,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 16
+  },
+  {
+   "attempt": "attempt-02",
+   "n": 1,
+   "base": "07-mixer-cold",
+   "claimed_gain": 0.017225476651941518,
+   "gain": 0.0187826056062399,
+   "ci95": 0.0006132990224797002,
+   "p": 1.605306012846448e-17,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 8
+  },
+  {
+   "attempt": "attempt-03",
+   "n": 1,
+   "base": "08-mixer-gate",
+   "claimed_gain": 0.0025959070432532982,
+   "gain": 0.0024802641496342037,
+   "ci95": 0.000833053113340308,
+   "p": 9.024814784844122e-06,
+   "outcome": "replicated",
+   "record": false,
+   "seed_runs_before": 13
+  },
+  {
+   "attempt": "attempt-04",
+   "n": 1,
+   "base": "08-mixer-gate",
+   "claimed_gain": 0.009095907043253249,
+   "gain": 0.009470385139681348,
+   "ci95": 0.0008111602416451874,
+   "p": 2.880137630500023e-13,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 44
+  }
+ ],
+ "smoke": false,
+ "pilots": [
+  {
+   "attempt": "pilot-01",
+   "n": 1,
+   "base": "05-mixer",
+   "claimed_gain": 0.0009382848604599925,
+   "gain": 0.0004451609315769822,
+   "ci95": 0.0010564207421734403,
+   "p": 0.1905478559309785,
+   "outcome": "inconclusive",
+   "record": false,
+   "seed_runs_before": 24
+  },
+  {
+   "attempt": "pilot-02",
+   "n": 1,
+   "base": "05-mixer",
+   "claimed_gain": 0.011538284860459935,
+   "gain": 0.011794216026568494,
+   "ci95": 0.000946987227252587,
+   "p": 2.124702749395872e-12,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 10
+  },
+  {
+   "attempt": "pilot-02",
+   "n": 2,
+   "base": "05-mixer",
+   "claimed_gain": 0.011938284860459891,
+   "gain": 0.012164345947326183,
+   "ci95": 0.0009604078598337546,
+   "p": 9.42059698902868e-13,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 14
+  }
+ ],
+ "null_control": {
+  "06-mixer-fold": {
+   "nulls": 8,
+   "false_replicated": {
+    "k": 0,
+    "n": 8,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.3244075683414076
+   },
+   "false_refuted": 0,
+   "rejected": 0,
+   "stage1_passes": 0,
+   "pairwise_false_positives": {
+    "k": 0,
+    "n": 56,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.06419393766646092
+   },
+   "stored_offset_in_se": 0.7478095889375188
+  },
+  "07-mixer-cold": {
+   "nulls": 8,
+   "false_replicated": {
+    "k": 0,
+    "n": 8,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.3244075683414076
+   },
+   "false_refuted": 0,
+   "rejected": 0,
+   "stage1_passes": 0,
+   "pairwise_false_positives": {
+    "k": 0,
+    "n": 56,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.06419393766646092
+   },
+   "stored_offset_in_se": -0.025114975558808008
+  }
+ }
+}
