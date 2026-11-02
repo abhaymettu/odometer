@@ -1,0 +1,23 @@
+1: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed 2092800028  test bpb 1.0969  train 3.997e+10 ticks   114.2 s  eval 12,180 ticks/byte  twins 9.5e-06
+  seed 2018588575  test bpb 1.0981  train 3.997e+10 ticks   114.7 s  eval 12,180 ticks/byte  twins 1.1e-05
+  seed  746556251  test bpb 1.0969  train 3.997e+10 ticks   112.8 s  eval 12,180 ticks/byte  twins 9.7e-06
+  seed  622407431  test bpb 1.0958  train 3.997e+10 ticks   113.0 s  eval 12,180 ticks/byte  twins 8.6e-06
+  seed 1288706234  test bpb 1.0980  train 3.997e+10 ticks   111.7 s  eval 12,180 ticks/byte  twins 8.6e-06
+  seed  338121746  test bpb 1.0963  train 3.997e+10 ticks   111.6 s  eval 12,180 ticks/byte  twins 7.7e-06
+  seed   66307520  test bpb 1.0973  train 3.997e+10 ticks   111.6 s  eval 12,180 ticks/byte  twins 8.5e-06
+  seed 1607906154  test bpb 1.0969  train 3.997e+10 ticks   111.9 s  eval 12,180 ticks/byte  twins 1.1e-05
+  mean 1.0970 +- 0.0007 bpb (95% CI, n=8, sd 0.0008)
+  gain over the record: +0.0095 +- 0.0008 bpb, p = 7.2e-12 (beyond a margin of 0.002)
+  passed; confirming on new seeds
+  seed  607225761  test bpb 1.0971  train 3.997e+10 ticks   112.6 s  eval 12,180 ticks/byte  twins 1.4e-05  (confirmation)
+  seed 1587918974  test bpb 1.0982  train 3.997e+10 ticks   112.6 s  eval 12,180 ticks/byte  twins 8.6e-06  (confirmation)
+  seed 1523016829  test bpb 1.0973  train 3.997e+10 ticks   114.1 s  eval 12,180 ticks/byte  twins 8.6e-06  (confirmation)
+  seed 1184756514  test bpb 1.0981  train 3.997e+10 ticks   114.1 s  eval 12,180 ticks/byte  twins 7.6e-06  (confirmation)
+  seed 2007870863  test bpb 1.0973  train 3.997e+10 ticks   113.1 s  eval 12,180 ticks/byte  twins 8.6e-06  (confirmation)
+  seed 1457017729  test bpb 1.0974  train 3.997e+10 ticks   112.9 s  eval 12,180 ticks/byte  twins 1.0e-05  (confirmation)
+  seed  637549588  test bpb 1.0959  train 3.997e+10 ticks   111.3 s  eval 12,180 ticks/byte  twins 7.6e-06  (confirmation)
+  seed  884698760  test bpb 1.0971  train 3.997e+10 ticks   111.5 s  eval 12,180 ticks/byte  twins 9.5e-06  (confirmation)
+  confirmation: +0.0092 +- 0.0008 bpb, p = 5.4e-12
+  NEW RECORD
+  log: study/attempts/attempt-04/claims/1/verify.json

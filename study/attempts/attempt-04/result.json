@@ -1,0 +1,67 @@
+{
+ "attempt": "attempt-04",
+ "smoke": false,
+ "base_record": "08-mixer-gate",
+ "status": "finished",
+ "claims": [
+  {
+   "n": 1,
+   "seed_runs_before": 44,
+   "claimed_dev_bpb": 1.0991,
+   "n_seeds": 8,
+   "why": "Beats the 1.1082 record through three changes to it: low-order tables (orders 1-4) pay embedding backward only on a fraction of steps, so higher orders see more bytes for the same ticks; two new in-window PPM stages are keyed on the case-folded current word prefix and on that prefix plus the previous word; and votes from before the last story boundary in the window count 0.1. The claimed mean is from 8 fresh seeds on dev (SD 0.0012, 95% CI +-0.0010), run once after the variant was chosen, and those seeds played no part in choosing it; this configuration scored 1.0973 on the single seed that selected it, among about 20 variants compared on one seed each, so that lower figure is not the estimate. Six further variants tried afterwards (more stages, a larger gate, wider hidden layer, hash reset at story boundaries) showed no gain and are not claimed. Two seeds of the unmodified record on this machine gave 1.1092 and 1.1097, slightly above its published 1.1082, so the gain over the published figure (0.0091) may slightly understate the gain measured here. How the gain divides among the three changes rests only on single-seed runs at a seed SD comparable to the differences, and the 0.1 vote weight in particular is not separated from noise against 0 or 0.25. The sealed split uses different windows from dev, so its mean may differ from this figure by more than seed noise.",
+   "sha256": "53bd37d82903995f20b4aa23a4c33d78c85e2fc7780534817b56b14ce0c13707",
+   "outcome": "replicated",
+   "gain": 0.009470385139681348,
+   "ci95": 0.0008111602416451874,
+   "ci_upper": 0.010281545381326536,
+   "p": 2.880137630500023e-13,
+   "df": 13.898243639688,
+   "claimed_gain": 0.009095907043253249,
+   "record": true,
+   "bpbs": [
+    1.0969342725252405,
+    1.0981439323627393,
+    1.0968962039971728,
+    1.0957982052105284,
+    1.0980171086346164,
+    1.0963261355038414,
+    1.097299340505347,
+    1.0969075221356548
+   ],
+   "seeds": [
+    2092800028,
+    2018588575,
+    746556251,
+    622407431,
+    1288706234,
+    338121746,
+    66307520,
+    1607906154
+   ],
+   "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+   "verdict": {
+    "against": "/home/runner/work/odometer/odometer/study/attempts/attempt-04/base.json",
+    "margin": 0.002,
+    "alpha": 0.01,
+    "stage1": {
+     "gain": 0.009470385139681348,
+     "ci95": 0.0008111602416451874,
+     "df": 13.898243639688,
+     "p_beyond_margin": 7.150344621565326e-12,
+     "passes": true
+    },
+    "record": true,
+    "stage2": {
+     "gain": 0.009190387428994251,
+     "ci95": 0.0007707782985588469,
+     "df": 13.998182580008407,
+     "p_beyond_margin": 5.358306925585683e-12,
+     "passes": true
+    }
+   }
+  }
+ ],
+ "ignored": [],
+ "seed_runs_total": 45
+}
