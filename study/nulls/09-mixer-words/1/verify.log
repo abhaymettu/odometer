@@ -1,0 +1,11 @@
+09-mixer-words: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed  306660559  test bpb 1.0984  train 3.997e+10 ticks   105.4 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed 2139808332  test bpb 1.0970  train 3.997e+10 ticks   104.8 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed 1862774362  test bpb 1.0971  train 3.997e+10 ticks   107.3 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed 2016315084  test bpb 1.0964  train 3.997e+10 ticks   107.2 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed  275582333  test bpb 1.0985  train 3.997e+10 ticks   107.1 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed 2134277885  test bpb 1.0967  train 3.997e+10 ticks   107.7 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed  691547067  test bpb 1.0971  train 3.997e+10 ticks   107.6 s  eval 12,180 ticks/byte  twins 0.0e+00
+  seed  858849553  test bpb 1.0986  train 3.997e+10 ticks   107.0 s  eval 12,180 ticks/byte  twins 0.0e+00
+  mean 1.0975 +- 0.0007 bpb (95% CI, n=8, sd 0.0009)
+  log: study/nulls/09-mixer-words/1/verify.json
