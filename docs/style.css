@@ -70,15 +70,16 @@ details.rec > summary::-webkit-details-marker { display: none; }
 .rec .bpb { font-weight: 620; font-size: 1.1875rem; letter-spacing: -0.01em; }
 .rec .who { color: var(--muted); font-size: 0.9375rem; min-width: 0; }
 .rec.current .bpb { color: var(--accent); }
-.bar { height: 8px; align-self: center; background: var(--line); border-radius: 2px; overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--ink); opacity: .78; }
-.rec.current .bar i { background: var(--accent); opacity: 1; }
+.bar { position: relative; height: 12px; align-self: center; background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat; }
+.bar i { position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--ink); }
+.bar.agent i { border-radius: 1px; transform: rotate(45deg); background: var(--accent); }
 @media (max-width: 720px) {
   details.rec > summary { grid-template-columns: 1.6rem minmax(0, 1fr) auto; gap: 2px 10px; }
   .rec .bar { display: none; }
   .rec .who { grid-column: 2 / -1; }
 }
 .detail { padding: 6px 4px 24px; display: grid; gap: 14px; }
+.detail h3 { margin: 10px 0 -6px; font-size: 0.9375rem; font-weight: 620; }
 .seeds { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.9375rem; color: var(--muted); }
 .detail pre { margin: 0; max-height: 420px; overflow: auto; background: var(--panel); border-radius: 8px; padding: 12px 14px; font-size: 0.8125rem; line-height: 1.5; }
 .review { max-width: 72ch; font-size: 0.9375rem; white-space: pre-wrap; overflow-wrap: anywhere; }

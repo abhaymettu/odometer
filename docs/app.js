@@ -170,13 +170,15 @@ function el(tag, cls, text) {
   if (text !== undefined) e.textContent = text;
   return e;
 }
-function recordRow(r, i, max) {
+// The same scale as the ladder figure: further right is lower, and a diamond is an agent.
+const barAt = (bpb) => ((1.75 - bpb) / (1.75 - 1.05)) * 100;
+function recordRow(r, i) {
   const d = el("details", "rec" + (r.current ? " current" : ""));
   const s = el("summary");
-  const bar = el("div", "bar");
-  const fill = el("i");
-  fill.style.width = `${(r.test / max) * 100}%`;
-  bar.append(fill);
+  const bar = el("div", r.source.startsWith("agent") ? "bar agent" : "bar");
+  const mark = el("i");
+  mark.style.left = `${barAt(r.test)}%`;
+  bar.append(mark);
   s.append(el("span", "n", String(i)), el("span", "name", r.title), el("span", "bpb", r.test.toFixed(4)), bar, el("span", "who", r.who));
   d.append(s);
   const body = el("div", "detail");
@@ -192,9 +194,9 @@ function recordRow(r, i, max) {
       links.append(a);
     }
     body.append(seeds, links);
-    if (r.why) body.append(el("p", "review", r.why));
+    if (r.why) body.append(el("h3", "", "Weak spots"), el("p", "review", r.why));
     const [code, review] = await Promise.all([fetch(r.code).then((x) => x.text()), fetch(r.review).then((x) => x.text())]);
-    body.append(el("div", "review", review.trim()), Object.assign(el("pre"), { textContent: code }));
+    body.append(el("h3", "", "The written review"), el("div", "review", review.trim()), el("h3", "", "The code"), Object.assign(el("pre"), { textContent: code }));
   });
   return d;
 }
@@ -215,8 +217,7 @@ async function main() {
   reference = ref;
   BUDGET = ref?.budget ?? 2e9;
   $("records-lead").textContent = data.lead;
-  const max = Math.max(...data.records.map((r) => r.test));
-  $("table").append(...data.records.map((r, i) => recordRow(r, data.records.length - i, max)));
+  $("table").append(...data.records.map((r, i) => recordRow(r, data.records.length - i)));
   for (const [id, html] of Object.entries(data.html)) $(id).innerHTML = html;
   await inlineFigures();
 }
