@@ -212,10 +212,8 @@ def load_entry(path, track):
 
 
 def peak_rss_mb():
-    try:
-        import resource
-    except ImportError:  # Windows
-        return None
+    import resource
+
     kb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     return kb / 1024 ** (2 if sys.platform == "darwin" else 1)
 
