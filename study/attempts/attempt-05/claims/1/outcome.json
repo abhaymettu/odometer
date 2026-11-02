@@ -1,0 +1,57 @@
+{
+ "n": 1,
+ "seed_runs_before": 16,
+ "claimed_dev_bpb": 1.0939,
+ "n_seeds": 8,
+ "why": "The record's table model and in-window PPM stages are unchanged apart from 6,012 fewer table rows; the gain comes from how the gate is fitted, because cached-table experiments showed it is short of fresh bytes rather than gradient steps. The gate now takes one gradient step per batch instead of three on windows of 256, its MLP is removed, and its previous-byte table is joined by a table on a hash of the last two bytes, with both tables trained by AdaGrad. About 62 variants were screened on dev, mostly with cached tables on seeds 11 and 12, then this exact file was scored once on 8 fresh seeds (mean 1.0939, SD 0.0008, 95% CI +-0.0007). Because the same dev windows informed the screening, the sealed-split score may come out somewhat higher than the dev figure. A follow-up that raised the gate-table rate to 0.2 looked about 0.0006 better in screening but scored 1.0941 on 8 fresh seeds, so it was not claimed.",
+ "sha256": "4bd8021c6c58a4cdde528a6e413d8f5efefdc39220b53cc7ec9f5dbc27f6fccc",
+ "outcome": "replicated",
+ "gain": 0.004723442926063415,
+ "ci95": 0.001281334175158442,
+ "ci_upper": 0.006004777101221857,
+ "p": 1.273720466215143e-06,
+ "df": 12.806852274127085,
+ "claimed_gain": 0.005486632112986278,
+ "record": true,
+ "bpbs": [
+  1.092802991198489,
+  1.0920155048317035,
+  1.0917464764191975,
+  1.0925301017459796,
+  1.0946879733894712,
+  1.093979270482419,
+  1.0924959855454472,
+  1.092684148362595
+ ],
+ "seeds": [
+  334329065,
+  1630746799,
+  1579942481,
+  661849803,
+  156893404,
+  362225855,
+  458838655,
+  972637805
+ ],
+ "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+ "verdict": {
+  "against": "/home/runner/work/odometer/odometer/study/attempts/attempt-05/base.json",
+  "margin": 0.002,
+  "alpha": 0.01,
+  "stage1": {
+   "gain": 0.004723442926063415,
+   "ci95": 0.001281334175158442,
+   "df": 12.806852274127085,
+   "p_beyond_margin": 0.0002590666351811072,
+   "passes": true
+  },
+  "record": true,
+  "stage2": {
+   "gain": 0.005084533111386902,
+   "ci95": 0.001222693909258582,
+   "df": 11.483229480946742,
+   "p_beyond_margin": 7.68730785304519e-05,
+   "passes": true
+  }
+ }
+}

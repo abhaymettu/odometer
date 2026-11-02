@@ -1,0 +1,5 @@
+{
+ "claimed_dev_bpb": 1.0939,
+ "n_seeds": 8,
+ "why": "The record's table model and in-window PPM stages are unchanged apart from 6,012 fewer table rows; the gain comes from how the gate is fitted, because cached-table experiments showed it is short of fresh bytes rather than gradient steps. The gate now takes one gradient step per batch instead of three on windows of 256, its MLP is removed, and its previous-byte table is joined by a table on a hash of the last two bytes, with both tables trained by AdaGrad. About 62 variants were screened on dev, mostly with cached tables on seeds 11 and 12, then this exact file was scored once on 8 fresh seeds (mean 1.0939, SD 0.0008, 95% CI +-0.0007). Because the same dev windows informed the screening, the sealed-split score may come out somewhat higher than the dev figure. A follow-up that raised the gate-table rate to 0.2 looked about 0.0006 better in screening but scored 1.0941 on 8 fresh seeds, so it was not claimed."
+}
