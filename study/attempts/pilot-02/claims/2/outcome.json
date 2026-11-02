@@ -1,0 +1,57 @@
+{
+ "n": 2,
+ "seed_runs_before": 14,
+ "claimed_dev_bpb": 1.1447,
+ "n_seeds": 4,
+ "why": "The same entry as claim 1 with a slower table schedule: tables from order 4 up update every 8 to 32 batches instead of every 4 to 16. The folded 130-way softmax and the lazy updates of big tables buy more training bytes than the record's mixer gets. Mean of 4 fresh dev seeds, SD 0.0015, excluding selection seed 101, which read 1.1430. This is not shown to be better than claim 1: the gap of 0.0004 is well inside the noise, and the seed spread here is wider. It is filed as a separate bet on the slower schedule.",
+ "sha256": "94abc82907988dcd03dbc42dc0bcfa90b4e1a7a47b46a627aa037bd8a7d26c66",
+ "outcome": "replicated",
+ "gain": 0.012164345947326183,
+ "ci95": 0.0009604078598337546,
+ "ci_upper": 0.013124753807159937,
+ "p": 9.42059698902868e-13,
+ "df": 12.342623486964733,
+ "claimed_gain": 0.011938284860459891,
+ "record": true,
+ "bpbs": [
+  1.1425759506036584,
+  1.1439905667757062,
+  1.1444738523704008,
+  1.1424863918488875,
+  1.1430564994100576,
+  1.143457179476249,
+  1.143871249677594,
+  1.1430600551005883
+ ],
+ "seeds": [
+  428626825,
+  336279913,
+  522453237,
+  329243315,
+  1799623130,
+  355896965,
+  679748231,
+  1452894423
+ ],
+ "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+ "verdict": {
+  "against": "/home/runner/work/odometer/odometer/study/attempts/pilot-02/base.json",
+  "margin": 0.002,
+  "alpha": 0.01,
+  "stage1": {
+   "gain": 0.012164345947326183,
+   "ci95": 0.0009604078598337546,
+   "df": 12.342623486964733,
+   "p_beyond_margin": 8.311559169245247e-12,
+   "passes": true
+  },
+  "record": true,
+  "stage2": {
+   "gain": 0.011484815477373456,
+   "ci95": 0.0010260030397532263,
+   "df": 13.588499222192405,
+   "p_beyond_margin": 9.714133868510908e-12,
+   "passes": true
+  }
+ }
+}

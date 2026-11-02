@@ -1,0 +1,57 @@
+{
+ "n": 1,
+ "seed_runs_before": 10,
+ "claimed_dev_bpb": 1.1451,
+ "n_seeds": 3,
+ "why": "The record's hashed context mixer with bytes folded into a 130-way softmax, which about halves the cost of the head and cross entropy, and with table updates scaled to table size: the three smallest every batch, the largest every sixteenth. The saved ticks buy more training bytes. Mean of 3 fresh dev seeds; the seed used for selection (101) read 1.1433 and is excluded because this schedule was picked from about a dozen variants on that seed.",
+ "sha256": "6b2f6ffcfdfec7d0adb2c71c161d7349354c635d985434783cd939c34e054e2e",
+ "outcome": "replicated",
+ "gain": 0.011794216026568494,
+ "ci95": 0.000946987227252587,
+ "ci_upper": 0.01274120325382108,
+ "p": 2.124702749395872e-12,
+ "df": 11.936415993250607,
+ "claimed_gain": 0.011538284860459935,
+ "record": true,
+ "bpbs": [
+  1.143478611025225,
+  1.1433449987198636,
+  1.1430108560602201,
+  1.1438323623252449,
+  1.1441594501707826,
+  1.1432928403413285,
+  1.1436799437382266,
+  1.1451337222483111
+ ],
+ "seeds": [
+  1087871577,
+  598752916,
+  633087486,
+  1069638360,
+  830217706,
+  671704067,
+  1023879973,
+  2121208589
+ ],
+ "code_sha256": "b180e8440ec132c29833787e89ee09be87f9a1c250e055216412e3c3b5d95a4b",
+ "verdict": {
+  "against": "/home/runner/work/odometer/odometer/study/attempts/pilot-02/base.json",
+  "margin": 0.002,
+  "alpha": 0.01,
+  "stage1": {
+   "gain": 0.011794216026568494,
+   "ci95": 0.000946987227252587,
+   "df": 11.936415993250607,
+   "p_beyond_margin": 1.8765664932674457e-11,
+   "passes": true
+  },
+  "record": true,
+  "stage2": {
+   "gain": 0.011225692243896024,
+   "ci95": 0.0010647805288808107,
+   "df": 13.898716581603594,
+   "p_beyond_margin": 1.621019148170588e-11,
+   "passes": true
+  }
+ }
+}
