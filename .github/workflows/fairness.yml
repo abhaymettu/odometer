@@ -36,6 +36,7 @@ jobs:
           python docs/demo/harness.py > out/demo-${{ matrix.os }}.json
           current=$(python -c "import json; print(json.load(open('records/current.json'))['name'])")
           python verify.py "${ENTRY:-records/$current/train.py}" --seeds "$SEEDS" --split dev --out out/${{ matrix.os }}.json
+          python verify.py study/fairness/branching/train.py --seeds "$SEEDS" --split dev --out out/branching-${{ matrix.os }}.json
       - uses: actions/upload-artifact@v4
         with:
           name: fair-${{ matrix.os }}

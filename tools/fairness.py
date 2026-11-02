@@ -1,6 +1,6 @@
 """Does the same entry get the same score on every machine? Compare verify.py logs of the same seeds.
 
-    python tools/fairness.py study/fairness/*.json --tolerance 1e-3
+    python tools/fairness.py study/fairness/*.json --tolerance 1e-4
 
 Ticks must match exactly, since they are a pure function of the program. Scores are floats that pass through each machine's
 BLAS, so they may differ, and the test is paired: for each machine against the reference (the first log), a TOST on the
@@ -46,7 +46,7 @@ def name_of(log):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("logs", nargs="+", type=pathlib.Path)
-    ap.add_argument("--tolerance", type=float, default=1e-3, help="bits per byte, either way")
+    ap.add_argument("--tolerance", type=float, default=1e-4, help="bits per byte, either way")
     ap.add_argument("--alpha", type=float, default=0.01)
     ap.add_argument("--out", type=pathlib.Path)
     args = ap.parse_args()

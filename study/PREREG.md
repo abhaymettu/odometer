@@ -178,3 +178,7 @@ not show that a gain has a real mechanism behind it, that it holds at other budg
   The isolation gate had passed, and the task prompt had not reached any model. A second launch stopped on the probe folder
   the first one left, also before the prompt reached a model. Neither was counted as an infrastructure death. The folders
   were removed and the id reused.
+- 2026-11-02 16:40 CST. "Run by hand" under Ladder meant started by the project's author for each record, with a fresh Claude session as the reviewer and no human expert. "Human recipes" meant recipes from the literature, ported and tuned with a coding agent. No person has run the track. All six reviews of agent records returned `real`, so the gate has not yet refused anything. `study/reviews.md` holds each brief and its model.
+- 2026-11-02 16:40 CST. The null control on record 10 was dispatched only after attempt-06 had finished. It is the fifth of the five starting records, and the plan does not fix when a null control runs.
+- 2026-11-02. To go public, history was rewritten once to remove three working notes (RUNLOG.md, WORKLOG.md, DESIGN.md), which changed every commit hash and left commit dates as they were. The plan was registered at commit 6fb4f5a of the private history. `study/provenance/` holds the map from old to new hashes and the Actions run list with its server timestamps, which are the external evidence for that date.
+

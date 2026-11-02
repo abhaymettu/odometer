@@ -1,5 +1,7 @@
 # Tuning log for the baseline entries
 
+"I" in this log is the coding agent that did the tuning, a Claude Code session. No person ran these configs.
+
 Every config I scored, with its dev mean and seed count, so a reader can see how much tuning went into each number. All scores are `verify.py --split dev` on fresh seeds at the real budget of 4e10 ticks, on one 4-vCPU VM, normally 4 seeds at a time. No full-budget run read the test split; two smoke runs did by mistake, and "How to read these numbers" below has the details and the overlaps. I made no change to the engine, its prices or the verifier.
 
 The mixer wins because this corpus rewards long exact contexts, and the price list sells them cheaply: a thin hashed row costs about 140 ticks per byte, so it sees seven times the transformers' bytes and reaches back 12 bytes. "Why the mixer wins" below has the evidence.

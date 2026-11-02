@@ -1,6 +1,6 @@
-"""Seat a new record. Every record passes the same gate, whoever wrote it: the record rule, then a fresh human-run review.
+"""Seat a new record. Every record passes the same gate, whoever wrote it: the record rule, then a fresh written review.
 
-    python -m study.ladder 01-gpt entries/gpt/train.py --review reviews/gpt.md --source "human: Karpathy nanoGPT recipe"
+    python -m study.ladder 01-gpt entries/gpt/train.py --review reviews/gpt.md --source "recipe: Karpathy nanoGPT"
     python -m study.ladder 02-x study/attempts/a/claims/1/train.py --review r.md --verdict study/attempts/a/claims/1/verify.json --source "agent: a/1"
 
 The incumbent's numbers come from 8 fresh test seeds run here and never used for any decision. A challenger's own
