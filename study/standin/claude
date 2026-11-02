@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""A stand-in for `claude -p`, for smoke tests of the harness only. It makes no network call and spends nothing.
+
+It behaves like an agent: edits a copy of the entry, scores it, writes claims, and speaks stream-json. The --model value
+picks the behavior: standin (one honest claim and several bad ones), standin-hang, standin-die, standin-denied.
+"""
+
+import json
+import os
+import pathlib
+import subprocess
+import sys
+import time
+
+FAKE_KEY = "sk-ant-oat01-" + "Fake0Key1" * 6
+FAKE_GITHUB = "ghp_" + "Fake0Github1" * 3
+FAKE_BEARER = "Bearer fakeBearer0123456789"
+FAKE_BLOB = "QWxhZGRpbjpvcGVuIHNlc2FtZTEyMzQ1Njc4OTBBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWjk4NzY1"
+
+
+def emit(**event):
+    print(json.dumps(event), flush=True)
+
+
+def bash(argv):
+    """What the real Bash tool does with CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1: the token does not reach the child."""
+    env = {k: v for k, v in os.environ.items() if k != "CLAUDE_CODE_OAUTH_TOKEN"}
+    proc = subprocess.run(argv, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    emit(type="assistant", message={"role": "assistant", "content": [{"type": "tool_use", "id": "t", "name": "Bash", "input": {"command": " ".join(argv)}}]})
+    emit(type="user", message={"role": "user", "content": [{"type": "tool_result", "tool_use_id": "t", "content": proc.stdout}]})
+    return proc
+
+
+def write_claim(n, source, meta):
+    claim = pathlib.Path("claims") / str(n)
+    claim.mkdir(parents=True, exist_ok=True)
+    (claim / "train.py").write_text(source)
+    (claim / "claim.json").write_text(meta if isinstance(meta, str) else json.dumps(meta))
+
+
+def act_like_an_agent():
+    base = pathlib.Path("entries/current/train.py").read_text()
+    pathlib.Path("verify.py").write_text(pathlib.Path("verify.py").read_text().replace("40_000_000_000", "40_000_000_001"))
+    write_claim(1, base.replace("LR = 3e-3", "LR = 4e-3"), {"claimed_dev_bpb": 0.0, "n_seeds": 2, "why": "A higher learning rate."})
+    bash(["python", "verify.py", "claims/1/train.py", "--smoke", "--split", "dev", "--seeds", "2", "--jobs", "2", "--out", "/tmp/claim1.json"])
+    bash(["python", "verify.py", "entries/current/train.py", "--smoke", "--split", "dev", "--seeds", "2", "--jobs", "2", "--out", "runs/base.json"])
+    mean = json.loads(pathlib.Path("/tmp/claim1.json").read_text())["summary"]["mean_bpb"]
+    write_claim(1, base.replace("LR = 3e-3", "LR = 4e-3"), {"claimed_dev_bpb": mean, "n_seeds": 2, "why": "A higher learning rate."})
+    write_claim(2, "import os\n" + base, {"claimed_dev_bpb": 1.0, "n_seeds": 8, "why": "Imports something forbidden."})
+    write_claim(3, base, "this is not json")
+    write_claim(4, base, {"claimed_dev_bpb": 1.0, "n_seeds": 8, "why": "One claim over the cap."})
+    emit(type="assistant", message={"role": "assistant", "content": [{"type": "text", "text": (
+        f"Planted for the scrub: {FAKE_KEY} {FAKE_GITHUB} {FAKE_BEARER} {FAKE_BLOB} literal={os.environ['CLAUDE_CODE_OAUTH_TOKEN']} "
+        f"CLAUDE_CODE_OAUTH_TOKEN={os.environ['CLAUDE_CODE_OAUTH_TOKEN']}")}]})
+
+
+def main():
+    args = sys.argv[1:]
+    if "--version" in args:
+        print("0.0.0 (stand-in)")
+        return
+    prompt, model = args[args.index("-p") + 1], args[args.index("--model") + 1]
+    emit(type="system", subtype="init", cwd=os.getcwd(), session_id="standin", tools=["Bash", "Read"], mcp_servers=[], model=model,
+         permissionMode="bypassPermissions", apiKeySource="none", slash_commands=[], agents=[], skills=[], plugins=[])
+    if "isolation probe" in prompt:
+        bash(["sh", "-c", "env | cut -d= -f1"])
+    elif model == "standin-die":
+        sys.exit(1)
+    elif model == "standin-hang":
+        subprocess.Popen(["sleep", "3600"])
+        time.sleep(3600)
+    elif model == "standin":
+        act_like_an_agent()
+    denials = [{"tool_name": "Bash", "tool_use_id": "t", "tool_input": {}}] if model == "standin-denied" else []
+    emit(type="result", subtype="success", is_error=False, duration_ms=1234, duration_api_ms=0, num_turns=3, result="done", session_id="standin",
+         permission_denials=denials, total_cost_usd=0.0, usage={"input_tokens": 0, "output_tokens": 0}, modelUsage={model: {"inputTokens": 0, "outputTokens": 0, "costUSD": 0.0}})
+
+
+if __name__ == "__main__":
+    main()
