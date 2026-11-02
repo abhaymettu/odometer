@@ -1,0 +1,11 @@
+07-mixer-cold: 8 seeds on test, 2 at a time, budget 4.0e+10 ticks
+  seed 1229147578  test bpb 1.1246  train 3.995e+10 ticks   106.0 s  eval 17,795 ticks/byte  twins 9.5e-06
+  seed 1655326093  test bpb 1.1262  train 3.995e+10 ticks   106.6 s  eval 17,795 ticks/byte  twins 1.0e-05
+  seed  391961607  test bpb 1.1250  train 3.995e+10 ticks   105.7 s  eval 17,795 ticks/byte  twins 1.1e-05
+  seed 1250097298  test bpb 1.1253  train 3.995e+10 ticks   105.0 s  eval 17,795 ticks/byte  twins 9.7e-06
+  seed 1323681062  test bpb 1.1267  train 3.995e+10 ticks   106.4 s  eval 17,795 ticks/byte  twins 1.2e-05
+  seed  360167066  test bpb 1.1254  train 3.995e+10 ticks   106.0 s  eval 17,795 ticks/byte  twins 9.5e-06
+  seed 2046814506  test bpb 1.1246  train 3.995e+10 ticks   104.5 s  eval 17,795 ticks/byte  twins 8.6e-06
+  seed   30830846  test bpb 1.1254  train 3.995e+10 ticks   104.3 s  eval 17,795 ticks/byte  twins 8.6e-06
+  mean 1.1254 +- 0.0006 bpb (95% CI, n=8, sd 0.0007)
+  log: study/nulls/07-mixer-cold/1/verify.json
