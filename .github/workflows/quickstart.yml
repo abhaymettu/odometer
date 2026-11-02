@@ -11,13 +11,17 @@ jobs:
         with:
           python-version: "3.12"
       - name: From an empty directory to a verified result, timed
-        env:
-          TOKEN: ${{ github.token }}
         run: |
           start=$(date +%s)
-          git clone "https://x-access-token:$TOKEN@github.com/$GITHUB_REPOSITORY" odometer
+          git clone "https://github.com/$GITHUB_REPOSITORY" odometer
           cd odometer
           python3 -m venv .venv
           .venv/bin/pip install numpy==2.5.4
           .venv/bin/python reproduce.py
-          echo "clean clone to verified result: $(( $(date +%s) - start )) seconds"
+          seconds=$(( $(date +%s) - start ))
+          echo "clean clone to verified result: $seconds seconds"
+          echo "{\"seconds\": $seconds, \"run\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" > ../quickstart.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quickstart
+          path: quickstart.json
