@@ -4,7 +4,7 @@ Training speedruns time you, so a result measures the idea and the GPU together,
 
 odometer charges every tensor operation a price in ticks, worked out from the tensor shapes alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server stop at the same reading with the same score, and a faster machine only gets there sooner. [The demo](https://abhaymettu.com/odometer/) shows this directly: it runs the current record's code in your tab at a smaller budget and stops on the same tick as native code.
 
-The current record is 1.0976 bits per byte, and the last 4 rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in ? seconds on a 2-core runner.
+The current record is 1.0887 bits per byte, and the last 6 rows of the table came from Claude Code agents. From a clean clone, `python reproduce.py` reruns it on fresh seeds in ? seconds on a 2-core runner.
 
 ## Why a meter
 
@@ -22,9 +22,9 @@ The repo holds 79 entries written to cheat, and a test pins the exact way each o
 
 ## What the agents did
 
-5 fresh Claude Code sessions ran one after another, each with Opus 5.5 at high effort, 40 minutes on a 4-core VM, and the current record to start from. I committed the plan and the count before the first one. The test split was zeroed in each agent's copy of the data, so a claim first met test data in a rerun in CI, after the session had ended.
+6 fresh Claude Code sessions ran one after another, each with Opus 5.5 at high effort, 40 minutes on a 4-core VM, and the current record to start from. I committed the plan and the count before the first one. The test split was zeroed in each agent's copy of the data, so a claim first met test data in a rerun in CI, after the session had ended.
 
-5 of 5 claims held up on 8 fresh seeds (Wilson 95% interval 0.57 to 1.00), and 4 became records. The plan predicted that claimed gains would shrink, and they did not: the median verified gain was 1.00 times the claimed one. These gains sit far above seed noise, where selection has little room to inflate anything, and I wouldn't expect that to hold nearer the noise.
+7 of 7 claims held up on 8 fresh seeds (Wilson 95% interval 0.65 to 1.00), and 5 became records. The plan predicted that claimed gains would shrink, and they did not: the median verified gain was 1.00 times the claimed one. These gains sit far above seed noise, where selection has little room to inflate anything, and I wouldn't expect that to hold nearer the noise.
 
 None of them replaced the model. Hashed context mixing was already the best recipe at this budget, and each record works inside it: fixing a padding artefact at the start of a window, a learned gate in place of hand-set constants, word contexts, fitting that gate on fresh bytes. A lot of this is specific to the track. About a third of one record's gain sits in the first 16 of 512 positions of a window, and about three quarters of another's comes from spending 36.5% more ticks at eval.
 
@@ -32,8 +32,8 @@ A session cost $2.21 to $4.49 at list price, and every transcript is in the repo
 
 ## What it doesn't settle
 
-The recipes at the bottom of the table were ported and tuned with a coding agent too, and no person has run this track, so nothing here compares agents with people. The reviews that decide a record are written by fresh Claude sessions and not by humans. 5 attempts on one model and one prompt give a wide interval and no general statement about agents.
+The recipes at the bottom of the table were ported and tuned with a coding agent too, and no person has run this track, so nothing here compares agents with people. The reviews that decide a record are written by fresh Claude sessions and not by humans. 6 attempts on one model and one prompt give a wide interval and no general statement about agents.
 
-The record rule has limited power: 8 seeds against 8 passes a true gain of one seed SD only 31% of the time, so claims near the noise tend to come back inconclusive. Resubmitting each starting record unchanged gave 0 false positives in 24 runs, which catches a broken pipeline and nothing finer. There is no memory or disk cap, and the seal on the test split stops accidents and not a determined entrant, since TinyStories is public.
+The record rule has limited power: 8 seeds against 8 passes a true gain of one seed SD only 31% of the time, so claims near the noise tend to come back inconclusive. Resubmitting each starting record unchanged gave 0 false positives in 32 runs, which catches a broken pipeline and nothing finer. There is no memory or disk cap, and the seal on the test split stops accidents and not a determined entrant, since TinyStories is public.
 
-What I couldn't find anywhere else is a training budget metered per operation and independent of hardware, so that's the part to judge this on. Survival of agent claims has been measured before, by "Separating Real Improvements from Lucky Runs in Autonomous ML Research" and, for prompts, "Winner's Curse in LLM Self-Improvement Loops", and the single `train.py` format comes from [karpathy/autoresearch](https://github.com/karpathy/autoresearch).
+What I couldn't find anywhere else is a training budget metered per operation and independent of hardware, so that's the part to judge this on. Survival of agent claims has been measured before, by "Separating Real Improvements from Lucky Runs in Autonomous ML Research" and, for prompts, "The Winner's Curse in LLM Self-Improvement Loops", and the single `train.py` format comes from [karpathy/autoresearch](https://github.com/karpathy/autoresearch).

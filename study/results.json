@@ -1,46 +1,46 @@
 {
  "attempts": {
-  "started": 5,
-  "counted": 5,
+  "started": 6,
+  "counted": 6,
   "excluded": [],
   "pending": [],
   "with_no_claims": 0,
   "with_tool_denials": 0
  },
  "claims": {
-  "total": 5,
-  "replicated": 5,
+  "total": 7,
+  "replicated": 7,
   "refuted": 0,
   "inconclusive": 0,
   "rejected": 0
  },
  "survival_per_claim": {
-  "k": 5,
-  "n": 5,
+  "k": 7,
+  "n": 7,
   "rate": 1.0,
-  "lo": 0.5655175313406071,
+  "lo": 0.6456695613241317,
   "hi": 1.0
  },
  "survival_per_attempt": {
-  "k": 5,
-  "n": 5,
+  "k": 6,
+  "n": 6,
   "rate": 1.0,
-  "lo": 0.5655175313406071,
+  "lo": 0.6096657083436265,
   "hi": 1.0
  },
  "shrinkage": {
-  "n": 5,
-  "median": 1.0047378736245687,
+  "n": 7,
+  "median": 0.9961633029007095,
   "min": 0.8609002442287911,
   "max": 1.0903968572691354,
   "left_out_no_claimed_gain": 0
  },
- "records": 4,
+ "records": 5,
  "seed_runs_per_claim": {
-  "n": 5,
+  "n": 7,
   "median": 16,
   "min": 8,
-  "max": 44
+  "max": 46
  },
  "best_verified_gain": 0.0187826056062399,
  "survival_by_base_record": {
@@ -70,6 +70,13 @@
    "n": 1,
    "rate": 1.0,
    "lo": 0.2065493117918027,
+   "hi": 1.0
+  },
+  "10-mixer-fresh": {
+   "k": 2,
+   "n": 2,
+   "rate": 1.0,
+   "lo": 0.3423802239546494,
    "hi": 1.0
   }
  },
@@ -133,6 +140,30 @@
    "outcome": "replicated",
    "record": true,
    "seed_runs_before": 16
+  },
+  {
+   "attempt": "attempt-06",
+   "n": 1,
+   "base": "10-mixer-fresh",
+   "claimed_gain": 0.003740213624206179,
+   "gain": 0.0033760998494456462,
+   "ci95": 0.000836666933855846,
+   "p": 2.820190214837742e-06,
+   "outcome": "replicated",
+   "record": false,
+   "seed_runs_before": 34
+  },
+  {
+   "attempt": "attempt-06",
+   "n": 2,
+   "base": "10-mixer-fresh",
+   "claimed_gain": 0.004140213624206135,
+   "gain": 0.0041243288786037,
+   "ci95": 0.0008583922703244031,
+   "p": 2.556046492307586e-07,
+   "outcome": "replicated",
+   "record": true,
+   "seed_runs_before": 46
   }
  ],
  "smoke": false,
@@ -237,6 +268,27 @@
     "hi": 0.06419393766646092
    },
    "stored_offset_in_se": -2.0764312336894566
+  },
+  "09-mixer-words": {
+   "nulls": 8,
+   "false_replicated": {
+    "k": 0,
+    "n": 8,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.3244075683414076
+   },
+   "false_refuted": 0,
+   "rejected": 0,
+   "stage1_passes": 0,
+   "pairwise_false_positives": {
+    "k": 0,
+    "n": 56,
+    "rate": 0.0,
+    "lo": 0.0,
+    "hi": 0.06419393766646092
+   },
+   "stored_offset_in_se": 0.40985963055482555
   }
  }
 }

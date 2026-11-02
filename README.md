@@ -5,7 +5,7 @@
 A speedrun for training a small language model, with a meter where the clock would be.
 
 <!-- quick -->
-**From a clean clone to a verified result in ? seconds on a 2-core runner ([log](https://github.com/abhaymettu/odometer)).** The current record scores 1.0976 bits per byte, and the last four rows of the table are Claude Code agents.
+**From a clean clone to a verified result in ? seconds on a 2-core runner ([log](https://github.com/abhaymettu/odometer)).** The current record scores 1.0887 bits per byte, and the last four rows of the table are Claude Code agents.
 <!-- /quick -->
 
 Every tensor operation costs ticks, priced from its shape alone. An entry gets 40 billion ticks to train a byte-level model on TinyStories, and its score is held-out bits per byte. A laptop and a server run the same program to the same reading and the same score, so hardware only buys finishing sooner. A record has to survive a rerun on fresh seeds by a verifier you can read in one sitting, and coding agents sit on the same table as everyone else.
@@ -38,6 +38,8 @@ That downloads the data, checks it against fixed hashes, reruns the current reco
 <!-- records -->
 |  | Record | Test bits per byte | From |
 |---|---|---|---|
+| 11 | [Mixing, thinner high-order tables, cheaper gate](records/11-mixer-thin) | 1.0887 ± 0.0008 | Claude Opus 5.5, attempt-06 of the series |
+| 10 | [Mixing, gate fitted on fresh bytes](records/10-mixer-fresh) | 1.0930 ± 0.0010 | Claude Opus 5.5, attempt-05 of the series |
 | 9 | [Mixing, words and story boundaries](records/09-mixer-words) | 1.0976 ± 0.0014 | Claude Opus 5.5, attempt-04 of the series |
 | 8 | [Mixing, learned in-window gate](records/08-mixer-gate) | 1.1065 ± 0.0007 | Claude Opus 5.5, attempt-02 of the series |
 | 7 | [Mixing, cold-start fix](records/07-mixer-cold) | 1.1256 ± 0.0007 | Claude Opus 5.5, attempt-01 of the series |
@@ -82,9 +84,9 @@ python verify.py entries/mine/train.py --against records/current.json
 ## Agents on the same table
 
 <!-- agents -->
-5 fresh Claude Code sessions ran one after another, each with Opus 5.5 at high effort, 40 minutes on a 4-core VM, and the current record to start from. The test split was zeroed in each agent's copy of the data, so a claim first met test data in the rerun, in a separate CI job, after the session had ended.
+6 fresh Claude Code sessions ran one after another, each with Opus 5.5 at high effort, 40 minutes on a 4-core VM, and the current record to start from. The test split was zeroed in each agent's copy of the data, so a claim first met test data in the rerun, in a separate CI job, after the session had ended.
 
-5 of 5 claims held up on 8 fresh seeds (Wilson 95% interval 0.57 to 1.00), and 4 became records. The registered plan predicted that claimed gains would shrink, and they did not: the median verified gain was 1.00 times the claimed one. That is a small sample with gains far above seed noise, so it may not hold nearer the noise.
+7 of 7 claims held up on 8 fresh seeds (Wilson 95% interval 0.65 to 1.00), and 5 became records. The registered plan predicted that claimed gains would shrink, and they did not: the median verified gain was 1.00 times the claimed one. That is a small sample with gains far above seed noise, so it may not hold nearer the noise.
 
 <img src="docs/fig/claims.svg" alt="Claimed gain against verified gain for each agent claim, with 95 percent intervals. Most verified gains sit on the claimed gains." width="100%">
 
@@ -95,8 +97,10 @@ python verify.py entries/mine/train.py --against records/current.json
 | 03 | 08-mixer-gate | 0.0026 | 0.0025 ± 0.0008 | replicated | no |
 | 04 | 08-mixer-gate | 0.0091 | 0.0095 ± 0.0008 | replicated | yes |
 | 05 | 09-mixer-words | 0.0055 | 0.0047 ± 0.0013 | replicated | yes |
+| 06 | 10-mixer-fresh | 0.0037 | 0.0034 ± 0.0008 | replicated | no |
+| 06 | 10-mixer-fresh | 0.0041 | 0.0041 ± 0.0009 | replicated | yes |
 
-Each record also needs a written review from a fresh Claude session that reads the code and logs and has to say what buys the gain: `records/<name>/review.md`. Most of these gains are tied to this track, and the reviews say where. As a check on the pipeline, each starting record went through it unchanged, 8 times over: 0 false positives in 24 runs across 3 records, which catches a broken pipeline and nothing finer. 1 run came back refuted, on record 08, whose stored batch of 8 seeds sits about 2.1 standard errors below the mean of its nulls, so gains measured against that record read about 0.0005 low. The sessions cost $2.21 to $4.49 each at list price.
+Each record also needs a written review from a fresh Claude session that reads the code and logs and has to say what buys the gain: `records/<name>/review.md`. Most of these gains are tied to this track, and the reviews say where. As a check on the pipeline, each starting record went through it unchanged, 8 times over: 0 false positives in 32 runs across 4 records, which catches a broken pipeline and nothing finer. 1 run came back refuted, on record 08, whose stored batch of 8 seeds sits about 2.1 standard errors below the mean of its nulls, so gains measured against that record read about 0.0005 low. The sessions cost $2.21 to $4.49 each at list price.
 <!-- /agents -->
 
 The plan, the count and the classification rule were committed before the first counted attempt: [study/PREREG.md](study/PREREG.md). Each agent's whole session is in `study/attempts/<id>/`.
