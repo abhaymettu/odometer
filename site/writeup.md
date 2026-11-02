@@ -10,7 +10,7 @@ The current record is 1.0887 bits per byte, against 1.1555 for the best recipe p
 
 The obvious way to remove hardware is to count FLOPs, and that doesn't work. Calibrated to time, a matmul costs one tick per 128 multiply-adds and `exp` one tick per element, so under a flat FLOP price an entry heavy on elementwise work would take about a hundred times longer for the same reading, and an agent would find that gap fast.
 
-So the prices track time instead. A tick is about one nanosecond of one laptop core, and each price is a function of shapes, so a program that doesn't branch on its floats reaches the same reading anywhere. The same seeds of the current record ran on ? machines: ticks matched exactly on all of them, and scores differed by at most ? bits per byte, about ? times below the record margin. ?
+So the prices track time instead. A tick is about one nanosecond of one laptop core, and each price is a function of shapes, so a program that doesn't branch on its floats reaches the same reading anywhere. The same seeds of the current record ran on 5 machines: ticks matched exactly on all of them, and scores differed by at most 4.2e-08 bits per byte, about 48,000 times below the record margin. A probe entry whose ticks follow its floats, through a branch on `item()`, also read the same ticks on all 4 CI machines, with scores within 1.2e-08.
 
 Prices are close to time and not equal to it. On x86, 331 of 335 calibration rows sit within 5x of the median, a copying `reshape` runs about 7x over its price, and squaring runs about 7x under its own. The prices were frozen once records stood on them, so those misses stay.
 

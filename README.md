@@ -127,12 +127,16 @@ The plan, the count and the classification rule were committed before the first 
 ## Same program, same reading
 
 <!-- fair -->
-For a program that does not branch on its floats, ticks are a function of the program, so they have to match exactly. Scores pass through each machine's BLAS, so they can differ in the last digits. Same seeds of `?`, each machine against ?, with a tolerance of ? fixed before the machines ran:
+For a program that does not branch on its floats, ticks are a function of the program, so they have to match exactly. Scores pass through each machine's BLAS, so they can differ in the last digits. Same seeds of `records/11-mixer-thin/train.py`, each machine against Linux x86_64, 4 cores, scipy-openblas 0.3.34.106.0, with a tolerance of 0.0001 fixed before the machines ran:
 
 | Machine | Same seeds | Ticks identical | Largest difference, bits per byte | Paired TOST p |
 |---|---|---|---|---|
+| Linux aarch64, 4 cores, scipy-openblas 0.3.34.106.0 | 4 | yes | 1.3e-08 | 1.5e-13 |
+| macOS arm64, 3 cores, accelerate | 4 | yes | 4.2e-08 | 3.5e-12 |
+| macOS x86_64, 4 cores, accelerate | 4 | yes | 3.5e-08 | 9.8e-13 |
+| Linux x86_64 on a Ryzen 9700X VM, 4 cores, scipy-openblas 0.3.34.106.0 | 4 | yes | 2.9e-08 | 6.8e-13 |
 
-The largest difference is ? bits per byte, about ? times below the record margin of 0.002. ? Rerun the comparison with `python tools/fairness.py study/fairness/logs/*.json`, or run the matrix yourself with [the fairness workflow](.github/workflows/fairness.yml) and download its artifacts. In a browser the demo reads the same tick as native code.
+The largest difference is 4.2e-08 bits per byte, about 48,000 times below the record margin of 0.002. A probe entry whose ticks follow its floats, through a branch on `item()`, also read the same ticks on all 4 CI machines, with scores within 1.2e-08. The stored logs came from [this Actions run](https://github.com/abhaymettu/odometer/actions/runs/41541021312) and a VM. Rerun the comparison with `python tools/fairness.py study/fairness/logs/*.json`, or run the matrix yourself with [the fairness workflow](.github/workflows/fairness.yml) and download its artifacts. In a browser the demo reads the same tick as native code.
 <!-- /fair -->
 
 ## What each tick buys

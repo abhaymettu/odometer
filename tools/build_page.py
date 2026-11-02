@@ -111,8 +111,8 @@ def branch_values():
     ticks = {tuple(s["train_ticks"] for s in log["seeds"]) for log in logs}
     biggest = max(abs(a["bpb"] - b["bpb"]) for log in logs[1:] for a, b in zip(logs[0]["seeds"], log["seeds"]))
     if len(ticks) == 1:
-        return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, also read the same ticks on all {len(logs)} machines, with scores within {biggest:.1e}."}
-    return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, did not read the same ticks on all {len(logs)} machines, and its scores differed by up to {biggest:.1e}. So the claim holds for programs that do not branch on values, which covers all {len(list((ROOT / 'records').glob('[0-9]*')))} records."}
+        return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, also read the same ticks on all {len(logs)} CI machines, with scores within {biggest:.1e}."}
+    return {"branch_note": f"A probe entry whose ticks follow its floats, through a branch on `item()`, did not read the same ticks on all {len(logs)} CI machines, and its scores differed by up to {biggest:.1e}. So the claim holds for programs that do not branch on values, which covers all {len(list((ROOT / 'records').glob('[0-9]*')))} records."}
 
 
 def fair_values():
@@ -122,7 +122,7 @@ def fair_values():
     f = json.loads(path.read_text())
     rows = f["rows"]
     biggest = max(x["max_abs_diff"] for x in rows)
-    return {"fair_machines": str(len(rows) + 1), "fair_max": f"{biggest:.1e}", "fair_ratio": f"{0.002 / biggest:,.0f}", "fair_seeds": str(rows[0]["seeds"]),
+    return {"fair_machines": str(len(rows) + 1), "fair_max": f"{biggest:.1e}", "fair_ratio": f"{float(f'{0.002 / biggest:.2g}'):,.0f}", "fair_seeds": str(rows[0]["seeds"]),
             "tolerance": f"{f['tolerance']:g}", "fair_p": f"{max(x['tost_p'] for x in rows):.1e}", "fair_entry": f["entry"], "fair_reference": f["reference"]}, rows
 
 

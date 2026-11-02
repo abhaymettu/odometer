@@ -40,7 +40,8 @@ def compare(reference, log, tolerance):
 
 def name_of(log):
     m = log["machine"]
-    return f"{m['platform'].split('-')[0]} {m['machine']}, {m['cpus']} cores, {m['blas']}"
+    host = log.get("host", "")
+    return f"{m['platform'].split('-')[0]} {m['machine']}{host}, {m['cpus']} cores, {m['blas'].removesuffix(' unknown')}"
 
 
 def main():

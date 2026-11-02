@@ -1,0 +1,39 @@
+{
+ "entry": "records/11-mixer-thin/train.py",
+ "tolerance": 0.0001,
+ "reference": "Linux x86_64, 4 cores, scipy-openblas 0.3.34.106.0",
+ "rows": [
+  {
+   "machine": "Linux aarch64, 4 cores, scipy-openblas 0.3.34.106.0",
+   "seeds": 4,
+   "max_abs_diff": 1.3111179031355391e-08,
+   "mean_diff": -3.993049502160062e-09,
+   "tost_p": 1.5221157667610896e-13,
+   "same_ticks": true
+  },
+  {
+   "machine": "macOS arm64, 3 cores, accelerate",
+   "seeds": 4,
+   "max_abs_diff": 4.197902447877766e-08,
+   "mean_diff": 1.5525064789301268e-08,
+   "tost_p": 3.5488581971834533e-12,
+   "same_ticks": true
+  },
+  {
+   "machine": "macOS x86_64, 4 cores, accelerate",
+   "seeds": 4,
+   "max_abs_diff": 3.504120615893669e-08,
+   "mean_diff": 6.736243840510525e-09,
+   "tost_p": 9.764763298833314e-13,
+   "same_ticks": true
+  },
+  {
+   "machine": "Linux x86_64 on a Ryzen 9700X VM, 4 cores, scipy-openblas 0.3.34.106.0",
+   "seeds": 4,
+   "max_abs_diff": 2.914480523585894e-08,
+   "mean_diff": 5.576947126328946e-09,
+   "tost_p": 6.845550011609101e-13,
+   "same_ticks": true
+  }
+ ]
+}

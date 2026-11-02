@@ -33,7 +33,7 @@
   ],
   "site": {
     "eyebrow": "Training speedrun · 40 billion ticks · 6 agent attempts · MIT",
-    "blurb": "A speedrun where every tensor operation costs ticks priced from its shape, so hardware only buys finishing sooner. Coding agents took the record from 1.1440 to 1.0887 bits per byte, and 5 of 7 claims cleared the record rule. The recipes at the bottom were ported with an agent too and no person has run the track, so nothing here compares agents with people.",
+    "blurb": "A speedrun where every tensor operation costs ticks priced from its shape, so hardware only buys finishing sooner. Coding agents took the record from 1.1555, the best recipe, to 1.0887 bits per byte, and 5 of 7 claims in the registered series cleared the record rule. The recipes were ported with an agent too and no person has run the track, so nothing here compares agents with people.",
     "group": "ml",
     "field": "ml"
   }
