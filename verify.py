@@ -47,7 +47,7 @@ import stats  # noqa: E402
 
 TRACK = {
     "version": "odometer-v3",
-    "train_budget": 100_000_000_000,  # ticks for everything train() does; one tick is about one laptop nanosecond
+    "train_budget": 40_000_000_000,  # ticks for everything train() does; about 80 s on a 4-core VM, 25 s on an M4
     "eval_ticks_per_byte": 50_000,  # forward() price cap per scored byte
     "param_cap": 1 << 22,  # floats in the returned parameters, plus characters in their names
     "source_cap": 64 * 1024,  # bytes of train.py

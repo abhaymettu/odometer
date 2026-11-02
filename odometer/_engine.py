@@ -9,7 +9,7 @@ cannot get cheap work by picking mispriced ops.
 
 Prices (v3), per call:
   * every call: 2000 ticks, the Python overhead of the call itself. Backward passes pay it again per node.
-  * matmul of (..., m, k) @ (..., k, n): m * max(k, 64) * n / 128 plus 256, per batch element (a 2-D right side is one
+  * matmul of (..., m, k) @ (..., k, n): max(m, 8) * max(k, 64) * max(n, 8) / 128 plus 256, per batch element (a 2-D right side is one
     flat call, so m counts the batch and the 256 is paid once). The same again per input needing a gradient, with the
     inner and outer dimensions swapped to match the product backward actually does.
   * cheap elementwise work (add, mul, negate, compare, copy, sum): 1 tick per 4 elements. ones and full 1 per 8, and
@@ -18,7 +18,7 @@ Prices (v3), per call:
     element. Integer % and //: 1 per element.
   * randn 4 and rand 2 per element. Logit ops (softmax, log_softmax, cross_entropy): 2 per logit, 1 per logit backward;
     cross_entropy pays the call price twice.
-  * embedding: 1 per 4 elements, plus per row 6 and 1 per million table floats; backward 16 per element plus the zeroed
+  * embedding: 1 per 4 elements, plus per row 8 and 2 per million table floats; backward 16 per element plus the zeroed
     table.
   * concat: 256 per input tensor on top of the elements, 1024 per input tensor backward. split: 2000 per part forward,
     512 per part backward. data.batch: 2000 plus 64 per row plus 1 per byte.
@@ -460,7 +460,7 @@ def rsqrt(x):
 
 
 def tanh(x):
-    return _unary(x, _np.tanh, lambda x, y, g: g * (1 - y * y), fwd=2, bwd=2)
+    return _unary(x, _np.tanh, lambda x, y, g: g * (1 - y * y), fwd=2, bwd=4)
 
 
 def sigmoid(x):
@@ -748,7 +748,8 @@ def concat(ts, axis=-1):
 
 
 def _matmul_price(rows, inner, cols, calls):
-    return calls * (rows * cols * (inner if inner > 64 else 64) // 128 + 256)
+    # thin products run far below BLAS's peak rate, so short sides price as if they had 8 rows or columns and 64 inner
+    return calls * ((rows if rows > 8 else 8) * (cols if cols > 8 else 8) * (inner if inner > 64 else 64) // 128 + 256)
 
 
 def matmul(a, b):
@@ -798,7 +799,7 @@ def embedding(table, idx):
     if ix.size and (ix.min() < 0 or ix.max() >= table.shape[0]):
         raise RuleViolation("embedding index out of range")
     out = table._d[ix]
-    _tick((6 + table.size // (1 << 20)) * ix.size + out.size // 4)  # bigger tables miss the cache on more rows
+    _tick((8 + table.size // (1 << 19)) * ix.size + out.size // 4)  # bigger tables miss the cache on more rows
     rows = table.shape
 
     def back(g, need):
