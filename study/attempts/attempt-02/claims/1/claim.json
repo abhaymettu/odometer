@@ -1,0 +1,5 @@
+{
+ "claimed_dev_bpb": 1.1086,
+ "n_seeds": 8,
+ "why": "Keeps the record's hashed table model on 92% of the budget and spends the last 8% fitting a small gate with the tables frozen. The gate replaces the record's hand-set in-window PPM constants: each stage's concentration and discount become functions of the position (vote totals, distinct-byte counts, top-vote share, the softmax's entropy and peak, and the last byte), an order-1 in-window stage is added, and a gated pair of weights mixes the softmax and the last stage as logits. Votes run over the 76 softmax classes, which halves the eval price. Measured with verify.py on 8 fresh seeds on dev: mean 1.1086, 95% CI +- 0.0008, SD 0.0009, against the record's 1.1258. Two caveats: the seed SD is higher than the record's 0.0005, probably because the gate fit adds noise (not separately measured), and stage orders and gate settings were chosen by comparing variants on a 512-window dev subset, so the dev figure may be slightly optimistic for the sealed split. The module docstring was corrected after the 8-seed run; the code was confirmed identical by AST comparison."
+}
